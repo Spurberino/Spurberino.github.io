@@ -9,7 +9,7 @@ let lastheal = 0;
 let camount = 1;
 let bamount = 4;
 let hamount = 1;
-let shootCD = 20;
+let shootCD = 30;
 let dmgCD = 90;
 let hpCD = 600;
 let playerhp = 5;
@@ -253,10 +253,38 @@ if(GameStarted){
             bouncers[i] = new Bouncer(random(0+10, width-10), random(0+10, height-10), bouncerhp, random(5, 10));
         }
     }
+
+    if (frameCount > lastShot+shootCD && player.toDelete == false){
+        if (keyIsDown(UP_ARROW)){
+            //console.log("Up");
+            let dir = createVector(0,-1);
+            let bullet = new Bullet(player.location.x, player.location.y, dir);
+            bullets.push(bullet);
+            lastShot = frameCount;
+        } else if (keyIsDown(DOWN_ARROW)){
+            //console.log("Down");
+            let dir = createVector(0,1);
+            let bullet = new Bullet(player.location.x, player.location.y, dir);
+            bullets.push(bullet);
+            lastShot = frameCount;
+        } else if (keyIsDown(LEFT_ARROW)){
+            //console.log("Left");
+            let dir = createVector(-1,0);
+            let bullet = new Bullet(player.location.x, player.location.y, dir);
+            bullets.push(bullet);
+            lastShot = frameCount;
+        } else if (keyIsDown(RIGHT_ARROW)){
+            //console.log("Right");
+            let dir = createVector(1,0);
+            let bullet = new Bullet(player.location.x, player.location.y, dir);
+            bullets.push(bullet);
+            lastShot = frameCount;
+        }
+    }
 }
 } //end of draw
 
-function keyPressed(){
+/*function keyPressed(){
     if (frameCount > lastShot+shootCD && player.toDelete == false){
         if (key === 'ArrowUp' ){
             //console.log("Up");
@@ -290,4 +318,4 @@ function keyPressed(){
             lastShot = frameCount;
         }
     }
-}
+}*/
