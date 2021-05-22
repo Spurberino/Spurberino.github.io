@@ -1,0 +1,6 @@
+/*
+Forhindrer scrolling
+*/
+body{
+    position:fixed;
+}
