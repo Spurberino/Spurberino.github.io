@@ -27,6 +27,8 @@ let chaserimg;
 let bouncerRimg;
 let bouncerLimg;
 let healthpackimg;
+let wavenumber = 1;
+let newwave = false;
 
 function preload() {
   playerimg = loadImage('img/player.png');
@@ -108,10 +110,10 @@ if(GameStarted){
         bullets[i].shoot();
         for (let j = 0; j < chasers.length; j++) {
             if (bullets[i].hits(chasers[j])) {
-                console.log("Hit!");
+                //console.log("Hit!");
                 chasers[j].damage();
                 bullets[i].disappear();
-                console.log("Chaser hp:", chasers[j].hp);
+                //console.log("Chaser hp:", chasers[j].hp);
             }
             if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height){
                 bullets[i].disappear();
@@ -119,10 +121,10 @@ if(GameStarted){
         }
         for (let j = 0; j < bouncers.length; j++) {
             if (bullets[i].hits(bouncers[j])) {
-                console.log("Hit!");
+                //console.log("Hit!");
                 bouncers[j].damage();
                 bullets[i].disappear();
-                console.log("Bouncer hp:", bouncers[j].hp);
+                //console.log("Bouncer hp:", bouncers[j].hp);
             }
             
             if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height){
@@ -140,6 +142,7 @@ if(GameStarted){
                         player.damage();
                         //console.log("Player hp:", player.hp);
                         lastdmg = frameCount;
+                        background(255, 0, 0);
                     }
                 }
             for (let i = 0; i < bouncers.length; i++) {
@@ -148,6 +151,7 @@ if(GameStarted){
                         player.damage();
                         //console.log("Player hp:", player.hp);
                         lastdmg = frameCount;
+                        background(255, 0, 0);
                     }
                 }
         }
@@ -158,11 +162,12 @@ if(GameStarted){
         if(player.hp < playermaxhp){
             for (let i = 0; i < hpacks.length; i++) {
                     if (hpacks[i].hits(player)) {
-                        console.log("Heal!");
+                        //console.log("Heal!");
                         player.heal();
                         //console.log("Player hp:", player.hp);
                         lastheal = frameCount;
                         hpackactive = false;
+                        background(0, 255, 0, 100);
                     }
                 }
             }
@@ -240,17 +245,27 @@ if(GameStarted){
 
     //New wave
     if(chasers.length < 1 && bouncers.length < 1){
+        fill(255);
+        text(`Wave ${wavenumber} completed!`, width/2, height/2);
 
-        bamount = bamount + 3;
-        camount = camount + 1;
-        lastdmg = frameCount;
+        if (!newwave) {
+            newwave = true;
 
-        for (let i = 0; i < camount; i++){
-            chasers[i] = new Chaser(random(width), random(height), chaserhp, random(50, 150));
-        }
-
-        for (let i = 0; i < bamount; i++){
-            bouncers[i] = new Bouncer(random(0+10, width-10), random(0+10, height-10), bouncerhp, random(5, 10));
+            setTimeout(function () {
+                bamount = bamount + 3;
+                camount = camount + 1;
+                lastdmg = frameCount;
+                wavenumber++;
+                
+                for (let i = 0; i < camount; i++){
+                    chasers[i] = new Chaser(random(width), random(height), chaserhp, random(50, 150));
+                }
+                
+                for (let i = 0; i < bamount; i++){
+                    bouncers[i] = new Bouncer(random(0+10, width-10), random(0+10, height-10), bouncerhp, random(5, 10));
+                }
+                newwave = false;
+            }, 2000);
         }
     }
 
