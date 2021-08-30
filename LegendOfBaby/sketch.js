@@ -19,7 +19,7 @@ let bouncerhp = 2;
 let GameStarted = true;
 let playermaxhp = 5;
 let hpackactive = false;
-
+let frameAmount = 0;
 let backgroundimg;
 let playerimg;
 let bulletimg;
@@ -29,6 +29,7 @@ let bouncerLimg;
 let healthpackimg;
 let wavenumber = 1;
 let newwave = false;
+let paused = false;
 
 function preload() {
   playerimg = loadImage('img/player.png');
@@ -39,6 +40,19 @@ function preload() {
   healthpackimg = loadImage('img/healthpack.png');
   backgroundimg = loadImage('img/background.png');
 }
+
+//Pause function
+function togglePause()
+{
+    if (!paused)
+    {
+        paused = true;
+    } else if (paused)
+    {
+       paused = false;
+    }
+}
+
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
@@ -58,11 +72,28 @@ function setup(){
     for (let i = 0; i < hamount; i++){
         hpacks[i] = new Healthpack(random(width), random(height));
     }
+
+    //Pause function event listener
+    window.addEventListener('keydown', function (e) {
+        var key = e.keyCode;
+        if (key === 80)// p key
+        {
+            togglePause();
+            textSize(48);
+            stroke(0);
+            strokeWeight(4);
+            fill(255);
+            text("Game Paused", width/2, height/2);
+        }
+        });
 }
 
 function draw(){
 //For menu (Not implemented)
 if(GameStarted){
+//For pause
+if (paused) return;
+    frameAmount++;
     imageMode(CORNER);
     resizeCanvas(windowWidth, windowHeight);
     background(backgroundimg);
@@ -82,7 +113,7 @@ if(GameStarted){
 
 
     //Enables healthpacks
-    if(frameCount >= hpCD + lastheal){
+    if(frameAmount >= hpCD + lastheal){
         for (let i = 0; i < hpacks.length; i++){
             hpacks[i].show();
             hpackactive = true;
@@ -135,13 +166,13 @@ if(GameStarted){
 
     //Damage player
     if(player.toDelete == false){
-        if (frameCount > lastdmg+dmgCD){
+        if (frameAmount > lastdmg+dmgCD){
             for (let i = 0; i < chasers.length; i++) {
                     if (chasers[i].hits(player)) {
                         //console.log("Hit!");
                         player.damage();
                         //console.log("Player hp:", player.hp);
-                        lastdmg = frameCount;
+                        lastdmg = frameAmount;
                         background(255, 0, 0);
                     }
                 }
@@ -150,7 +181,7 @@ if(GameStarted){
                         //console.log("Hit!");
                         player.damage();
                         //console.log("Player hp:", player.hp);
-                        lastdmg = frameCount;
+                        lastdmg = frameAmount;
                         background(255, 0, 0);
                     }
                 }
@@ -165,7 +196,7 @@ if(GameStarted){
                         //console.log("Heal!");
                         player.heal();
                         //console.log("Player hp:", player.hp);
-                        lastheal = frameCount;
+                        lastheal = frameAmount;
                         hpackactive = false;
                         background(0, 255, 0, 100);
                     }
@@ -237,7 +268,7 @@ if(GameStarted){
     }
 
     //Healthpack spawns
-    if(frameCount > lastheal + hpCD && hpackactive == false){
+    if(frameAmount > lastheal + hpCD && hpackactive == false){
             for (let i = 0; i < camount; i++){
                 hpacks[i] = new Healthpack(random(width), random(height));
             }
@@ -254,7 +285,7 @@ if(GameStarted){
             setTimeout(function () {
                 bamount = bamount + 3;
                 camount = camount + 1;
-                lastdmg = frameCount;
+                lastdmg = frameAmount;
                 wavenumber++;
                 
                 for (let i = 0; i < camount; i++){
@@ -269,44 +300,44 @@ if(GameStarted){
         }
     }
 
-    if (frameCount > lastShot+shootCD && player.toDelete == false){
+    if (frameAmount > lastShot+shootCD && player.toDelete == false){
         if (keyIsDown(UP_ARROW)){
             //console.log("Up");
             let dir = createVector(0,-1);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         } else if (keyIsDown(DOWN_ARROW)){
             //console.log("Down");
             let dir = createVector(0,1);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         } else if (keyIsDown(LEFT_ARROW)){
             //console.log("Left");
             let dir = createVector(-1,0);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         } else if (keyIsDown(RIGHT_ARROW)){
             //console.log("Right");
             let dir = createVector(1,0);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         }
     }
 }
 } //end of draw
 
 /*function keyPressed(){
-    if (frameCount > lastShot+shootCD && player.toDelete == false){
+    if (frameAmount > lastShot+shootCD && player.toDelete == false){
         if (key === 'ArrowUp' ){
             //console.log("Up");
             let dir = createVector(0,-1);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         }
         
         if (key === 'ArrowDown'){
@@ -314,7 +345,7 @@ if(GameStarted){
             let dir = createVector(0,1);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         }
 
         if (key === 'ArrowLeft'){
@@ -322,7 +353,7 @@ if(GameStarted){
             let dir = createVector(-1,0);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         }
 
         if (key === 'ArrowRight'){
@@ -330,7 +361,7 @@ if(GameStarted){
             let dir = createVector(1,0);
             let bullet = new Bullet(player.location.x, player.location.y, dir);
             bullets.push(bullet);
-            lastShot = frameCount;
+            lastShot = frameAmount;
         }
     }
 }*/
