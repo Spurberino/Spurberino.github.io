@@ -1,3 +1,4 @@
+/*
 let player;
 let chasers = [];
 let bullets = [];
@@ -30,6 +31,7 @@ let healthpackimg;
 let wavenumber = 1;
 let newwave = false;
 let paused = false;
+*/
 
 function preload() {
   playerimg = loadImage('img/player.png');
@@ -110,10 +112,18 @@ if(!GameStarted){
     stroke(0);
     strokeWeight(5);
     text("The Legend of Baby", width/2, height/3);
+    strokeWeight(2);
+    textSize(24);
+    text("Control character with WASD", width/4, height/2-30);
+    text("Shoot with arrow keys", width/4, height/2);
+    text("Pause with P", width/4, height/2+30);
+    text("Shoot enemies to gain points", width/2*1.5, height/2-30);
+    text("You lose health if enemies hit you", width/2*1.5, height/2);
+    text("Regain health with healthpacks", width/2*1.5, height/2+30);
 }
-//For menu (Not implemented)
+//Start menu
 if(GameStarted){
-//For pause
+//Pause
 if (paused) return;
     frameAmount++;
     imageMode(CORNER);
@@ -124,7 +134,9 @@ if (paused) return;
     textAlign(CENTER);
     textSize(24);
     fill(255);
-    text(`HP: ${player.hp}`, 40, 40);
+    strokeWeight(2);
+    text(`HP: ${player.hp}`, 100, 40);
+    text(`Wave ${wavenumber}`, width-100, 40);
     textSize(36);
     text(score, width/2, 40);
 
