@@ -16,7 +16,7 @@ let playerhp = 5;
 let score = 0;
 let chaserhp = 4;
 let bouncerhp = 2;
-let GameStarted = true;
+let GameStarted = false;
 let playermaxhp = 5;
 let hpackactive = false;
 let frameAmount = 0;
@@ -42,8 +42,7 @@ function preload() {
 }
 
 //Pause function
-function togglePause()
-{
+function togglePause(){
     if (!paused)
     {
         paused = true;
@@ -53,6 +52,10 @@ function togglePause()
     }
 }
 
+function startGame(){
+    GameStarted = true;
+    removeElements();
+}
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
@@ -81,14 +84,33 @@ function setup(){
             togglePause();
             textSize(48);
             stroke(0);
-            strokeWeight(4);
+            strokeWeight(5);
             fill(255);
             text("Game Paused", width/2, height/2);
         }
         });
+    
+    //Start game button
+    button = createButton('Start Game');
+    button.mousePressed(startGame);
+    
 }
 
 function draw(){
+if(!GameStarted){
+    //Draws background while game is not started and relocates button in case of window relocation
+    imageMode(CORNER);
+    resizeCanvas(windowWidth, windowHeight);
+    background(backgroundimg);
+    strokeWeight(0);
+    button.position(width/2-60, height/2);
+    textAlign(CENTER);
+    fill(255);
+    textSize(72);
+    stroke(0);
+    strokeWeight(5);
+    text("The Legend of Baby", width/2, height/3);
+}
 //For menu (Not implemented)
 if(GameStarted){
 //For pause

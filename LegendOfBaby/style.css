@@ -4,3 +4,16 @@ Forhindrer scrolling
 body{
     position:fixed;
 }
+
+button{
+    text-align:center;
+    background-color: black;
+    border: none;
+    color: white;
+    height: 60px;
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+}
