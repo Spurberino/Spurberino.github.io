@@ -276,6 +276,7 @@ if (paused) return;
         textSize(52);
         fill(255);
         text("You died", width/2, height/2);
+        text(`Final score: ${score}`, width/2, height/2+50);
         player.opacity = 0;
         player.strokeWeight = 0;
         playerimg = loadImage('img/empty.png')
