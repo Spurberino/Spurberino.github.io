@@ -1,38 +1,3 @@
-/*
-let player;
-let chasers = [];
-let bullets = [];
-let bouncers = [];
-let hpacks = [];
-let lastShot = 0;
-let lastdmg = 0;
-let lastheal = 0;
-let camount = 1;
-let bamount = 4;
-let hamount = 1;
-let shootCD = 30;
-let dmgCD = 90;
-let hpCD = 600;
-let playerhp = 5;
-let score = 0;
-let chaserhp = 4;
-let bouncerhp = 2;
-let GameStarted = false;
-let playermaxhp = 5;
-let hpackactive = false;
-let frameAmount = 0;
-let backgroundimg;
-let playerimg;
-let bulletimg;
-let chaserimg;
-let bouncerRimg;
-let bouncerLimg;
-let healthpackimg;
-let wavenumber = 1;
-let newwave = false;
-let paused = false;
-*/
-
 function preload() {
   playerimg = loadImage('img/player.png');
   bulletimg = loadImage('img/bullet.png');
@@ -85,8 +50,8 @@ function setup(){
 
     //Pause function event listener
     window.addEventListener('keydown', function (e) {
-        var key = e.keyCode;
-        if (key === 80)// p key
+        var key = e.key;
+        if (key === 'p')
         {
             togglePause();
             textSize(48);
@@ -125,8 +90,9 @@ if(!GameStarted){
     text("Shoot enemies to gain points", width/2*1.5, height/2-30);
     text("You lose health if enemies hit you", width/2*1.5, height/2);
     text("Regain health with healthpacks", width/2*1.5, height/2+30);
+    text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
     //Version number
-    text("v0.5.0-beta", width-70, height-10);
+    text("v0.5.1-beta", width-70, height-10);
 }
 //Start menu
 if(GameStarted){
