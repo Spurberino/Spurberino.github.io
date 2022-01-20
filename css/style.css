@@ -7,21 +7,22 @@ body{
 }
 
 .menubutton{
-    background-color: white; /* White */
+    background-color: white;
+    color:black;
     border: none;
-    color: white;
     padding: 8px 16px;
     margin: 0px 8px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 20px;
-    color:black;
     min-width:200px;
+    border-radius: 10px;
+    transition: 0.15s;
 }
 
 .menubutton:hover{
-    background-color:#f1f1f1;
+    background-color:#999999;
 }
 
 .title{
