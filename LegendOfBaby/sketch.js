@@ -41,6 +41,7 @@ function preload() {
   bouncerLimg = loadImage('img/bouncer-left.png');
   healthpackimg = loadImage('img/healthpack.png');
   backgroundimg = loadImage('img/background.png');
+  powerupspeedimg = loadImage('img/powerupspeed.png');
 }
 
 //Pause function
@@ -76,6 +77,10 @@ function setup(){
 
     for (let i = 0; i < hamount; i++){
         hpacks[i] = new Healthpack(random(width), random(height));
+    }
+
+    for (let i = 0; i < hamount; i++){
+        speedpower[i] = new PowerupSpeed(random(width),random(height))
     }
 
     //Pause function event listener
@@ -120,6 +125,8 @@ if(!GameStarted){
     text("Shoot enemies to gain points", width/2*1.5, height/2-30);
     text("You lose health if enemies hit you", width/2*1.5, height/2);
     text("Regain health with healthpacks", width/2*1.5, height/2+30);
+    //Version number
+    text("v0.5.0-beta", width-70, height-10);
 }
 //Start menu
 if(GameStarted){
@@ -151,6 +158,15 @@ if (paused) return;
         for (let i = 0; i < hpacks.length; i++){
             hpacks[i].show();
             hpackactive = true;
+            break;
+        }
+    }
+
+    //Enables speed powerup
+    if(frameAmount >= spCD + lastSP){
+        for (let i = 0; i < speedpower.length; i++){
+            speedpower[i].show();
+            spactive = true;
             break;
         }
     }
@@ -238,6 +254,18 @@ if (paused) return;
             }
         }
 
+    //Powerup speed to player
+    if(player.toDelete == false){
+        for(let i = 0; i < speedpower.length; i++){
+            if(speedpower[i].hits(player)){
+                shootCD = 10;
+                setTimeout(function () { shootCD = 30 }, 5000)
+                 lastSP = frameAmount;
+                 spactive = false;
+                background(255, 191, 0, 100)
+            }
+        }
+    }
 
     //Deletes objects
     for (let i = bullets.length-1; i >= 0; i--) {
@@ -250,6 +278,14 @@ if (paused) return;
         if (hpacks[i].toDelete){
             hpacks.splice(i, 1);
             hpackactive = false;
+        }
+    }
+
+    for (let i = speedpower.length-1; i >= 0; i--) {
+        if (speedpower[i].toDelete){
+            speedpower.splice(i, 1);
+            //Note: Make spactive only be false after powerup ends
+            spackactive = false;
         }
     }
 
@@ -304,10 +340,17 @@ if (paused) return;
 
     //Healthpack spawns
     if(frameAmount > lastheal + hpCD && hpackactive == false){
-            for (let i = 0; i < camount; i++){
-                hpacks[i] = new Healthpack(random(width), random(height));
-            }
+        for (let i = 0; i < hamount; i++){
+            hpacks[i] = new Healthpack(random(width), random(height));
         }
+    }
+
+    //Speedpower spawns
+    if(frameAmount > lastSP + spCD && spactive == false){
+        for (let i = 0; i < spamount; i++){
+            speedpower[i] = new PowerupSpeed(random(width), random(height));
+        }
+    }
 
     //New wave
     if(chasers.length < 1 && bouncers.length < 1){
