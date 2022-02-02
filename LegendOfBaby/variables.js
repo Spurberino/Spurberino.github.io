@@ -26,6 +26,7 @@ let playermaxhp = 5;
 let hpackactive = false;
 let spactive = false;
 let frameAmount = 0;
+//images
 let backgroundimg;
 let playerimg;
 let bulletimg;
@@ -33,6 +34,10 @@ let chaserimg;
 let bouncerRimg;
 let bouncerLimg;
 let healthpackimg;
+//sounds
+let oof
+let jebno
 let wavenumber = 1;
 let newwave = false;
 let paused = false;
+let isAlive = true;

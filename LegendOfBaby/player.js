@@ -26,6 +26,7 @@ class Player {
 
         this.damage = function() {
             this.hp--;
+            oof.play();
         }
 
         this.heal = function (){

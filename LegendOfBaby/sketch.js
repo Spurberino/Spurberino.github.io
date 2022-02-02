@@ -1,12 +1,16 @@
 function preload() {
-  playerimg = loadImage('img/player.png');
-  bulletimg = loadImage('img/bullet.png');
-  chaserimg = loadImage('img/chaser.png');
-  bouncerRimg = loadImage('img/bouncer-right.png');
-  bouncerLimg = loadImage('img/bouncer-left.png');
-  healthpackimg = loadImage('img/healthpack.png');
-  backgroundimg = loadImage('img/background.png');
-  powerupspeedimg = loadImage('img/powerupspeed.png');
+    //images
+    playerimg = loadImage('img/player.png');
+    bulletimg = loadImage('img/bullet.png');
+    chaserimg = loadImage('img/chaser.png');
+    bouncerRimg = loadImage('img/bouncer-right.png');
+    bouncerLimg = loadImage('img/bouncer-left.png');
+    healthpackimg = loadImage('img/healthpack.png');
+    backgroundimg = loadImage('img/background.png');
+    powerupspeedimg = loadImage('img/powerupspeed.png');
+    //sounds
+    oof = loadSound('sound/oof.mp3');
+    jebno = loadSound('sound/jebno.mp3')
 }
 
 //Pause function
@@ -92,7 +96,7 @@ if(!GameStarted){
     text("Regain health with healthpacks", width/2*1.5, height/2+30);
     text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
     //Version number
-    text("v0.5.2-beta", width-70, height-10);
+    text("v0.6.0-beta", width-70, height-10);
 }
 //Start menu
 if(GameStarted){
@@ -284,6 +288,10 @@ if (paused) return;
         player.move = function(){}
         player.damage = function(){}
         player.score = function(){}
+        if(isAlive == true){
+            jebno.play();
+            isAlive = false;
+        }
     }
 
     //Border for player
