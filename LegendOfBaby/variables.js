@@ -20,6 +20,7 @@ let playerhp = 5;
 let score = 0;
 let chaserhp = 4;
 let bouncerhp = 2;
+let bulletdamage = 1;
 let GameStarted = false;
 let playermaxhp = 5;
 let hpackactive = false;

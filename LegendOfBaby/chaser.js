@@ -33,7 +33,7 @@ class Chaser {
         }
 
         this.damage = function() {
-            this.hp--;
+            this.hp = this.hp-bulletdamage;
         }
 
         

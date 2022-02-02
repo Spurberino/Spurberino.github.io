@@ -92,7 +92,7 @@ if(!GameStarted){
     text("Regain health with healthpacks", width/2*1.5, height/2+30);
     text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
     //Version number
-    text("v0.5.1-beta", width-70, height-10);
+    text("v0.5.2-beta", width-70, height-10);
 }
 //Start menu
 if(GameStarted){
@@ -250,7 +250,6 @@ if (paused) return;
     for (let i = speedpower.length-1; i >= 0; i--) {
         if (speedpower[i].toDelete){
             speedpower.splice(i, 1);
-            //Note: Make spactive only be false after powerup ends
             spackactive = false;
         }
     }

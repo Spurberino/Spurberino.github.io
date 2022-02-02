@@ -37,7 +37,7 @@ class Bouncer {
         }
 
         this.damage = function() {
-            this.hp--;
+            this.hp = this.hp-bulletdamage;
         }
 
         this.hits = function(player){
