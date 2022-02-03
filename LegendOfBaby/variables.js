@@ -41,3 +41,7 @@ let wavenumber = 1;
 let newwave = false;
 let paused = false;
 let isAlive = true;
+//timer
+let minutes = 0;
+let seconds = 0;
+let totalSeconds = 0;
