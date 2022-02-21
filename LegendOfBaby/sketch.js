@@ -15,7 +15,7 @@ function preload() {
 }
 
 //Pause function
-function togglePause(){
+function togglePause() {
     if (!paused) {
         paused = true;
     } else if (paused) {
@@ -23,9 +23,25 @@ function togglePause(){
     }
 }
 
+//What happens when you press the start button
 function startGame() {
     GameStarted = true;
     removeElements();
+}
+//what happens when you press the 'How to play' button
+function howToPlay() {
+    HowToPlay = true;
+    removeElements();
+}
+//What happens when you press the 'Main menu' button
+function mainMenu() {
+    HowToPlay = false;
+    removeElements();
+    backbuttonexists = false;
+    startbutton = createButton('Start Game');
+    startbutton.mousePressed(startGame);
+    helpbutton = createButton('How To Play');
+    helpbutton.mousePressed(howToPlay);
 }
 
 //makes timer always have two numbers for seconds and minutes
@@ -74,9 +90,12 @@ function setup() {
         }
     });
     
-    //Start game button
-    button = createButton('Start Game');
-    button.mousePressed(startGame);
+    //Menu buttons
+    console.log(textSize);
+    startbutton = createButton('Start Game');
+    startbutton.mousePressed(startGame);
+    helpbutton = createButton('How To Play');
+    helpbutton.mousePressed(howToPlay);
 
     setInterval(testing,1000);
     function testing() {
@@ -89,12 +108,12 @@ function setup() {
 
 function draw() {
     if(!GameStarted) {
-        //Draws background while game is not started and relocates button in case of window relocation
         imageMode(CORNER);
         resizeCanvas(windowWidth, windowHeight);
         background(backgroundimg);
         strokeWeight(0);
-        button.position(width/2-60, height/2);
+        startbutton.position((2*width/5)-60, height/2);
+        helpbutton.position(width-(2*width/5)-60, height/2)
         textAlign(CENTER);
         fill(255);
         textSize(72);
@@ -103,16 +122,27 @@ function draw() {
         text("The Legend of Baby", width/2, height/3);
         strokeWeight(2);
         textSize(24);
-        text("Control character with WASD", width/4, height/2-30);
-        text("Shoot with arrow keys", width/4, height/2);
-        text("Pause with P", width/4, height/2+30);
-        text("Shoot enemies to gain points", width/2*1.5, height/2-30);
-        text("You lose health if enemies hit you", width/2*1.5, height/2);
-        text("Regain health with healthpacks", width/2*1.5, height/2+30);
-        text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
         //Version number
-        text("v0.6.2-beta", width-70, height-10);
+        text("v0.6.3-beta", width-70, height-10);
     }
+
+    if(HowToPlay) {
+        text("Control character with WASD", width/3, height/2-30);
+        text("Shoot with arrow keys", width/3, height/2);
+        text("Pause with P", width/3, height/2+30);
+        text("Shoot enemies to gain points", width-width/3, height/2-30);
+        text("You lose health if enemies hit you", width-width/3, height/2);
+        text("Regain health with healthpacks", width-width/3, height/2+30);
+        text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
+        //Makes the menu button only appear once
+        if(!backbuttonexists) {
+            backbutton = createButton('Main Menu');
+            backbutton.mousePressed(mainMenu);
+            backbuttonexists = true;
+        }
+        backbutton.position(width/2-60, height-height/4)
+    }
+
     //Start menu
     if(GameStarted) {
         //Pause

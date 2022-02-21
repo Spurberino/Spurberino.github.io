@@ -22,10 +22,12 @@ let chaserhp = 4;
 let bouncerhp = 2;
 let bulletdamage = 1;
 let GameStarted = false;
+let HowToPlay = false;
 let playermaxhp = 5;
 let hpackactive = false;
 let spactive = false;
 let frameAmount = 0;
+let backbuttonexists = false;
 //images
 let backgroundimg;
 let playerimg;
