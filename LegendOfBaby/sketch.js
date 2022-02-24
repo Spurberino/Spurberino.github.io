@@ -14,6 +14,7 @@ function preload() {
     loseSound = loadSound('sound/losesound.mp3');
     powerUpSound = loadSound('sound/powerUp.wav');
     healSound = loadSound('sound/healsound.wav');
+    //song credit: A Bit Of Hope by David Fesliyan https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6
     song = loadSound('sound/song.mp3');
 }
 
