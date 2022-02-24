@@ -10,16 +10,21 @@ function preload() {
     backgroundimg = loadImage('img/background.png');
     powerupspeedimg = loadImage('img/powerupspeed.png');
     //sounds
-    oof = loadSound('sound/oof.mp3');
-    jebno = loadSound('sound/jebno.mp3');
+    damageSound = loadSound('sound/damagesound.wav');
+    loseSound = loadSound('sound/losesound.mp3');
+    powerUpSound = loadSound('sound/powerUp.wav');
+    healSound = loadSound('sound/healsound.wav');
+    song = loadSound('sound/song.mp3');
 }
 
 //Pause function
 function togglePause() {
     if (!paused) {
         paused = true;
+        song.pause();
     } else if (paused) {
        paused = false;
+       song.loop();
     }
 }
 
@@ -27,6 +32,7 @@ function togglePause() {
 function startGame() {
     GameStarted = true;
     removeElements();
+    song.loop();
 }
 //what happens when you press the 'How to play' button
 function howToPlay() {
@@ -54,10 +60,27 @@ function pad(val) {
     }
 }
 
+function mutesong() {
+    if(!songmuted){
+        song.setVolume(0);
+        songmuted = true;
+    } else {
+        song.setVolume(0.2);
+        songmuted = false;
+    }
+}
+
+function keyPressed() {
+    if(key === "m"){
+        mutesong();
+    }
+}
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
     imageMode(CENTER);
+    song.setVolume(0.2);
 
     player = new Player(playerhp);
 
@@ -97,9 +120,10 @@ function setup() {
     helpbutton = createButton('How To Play');
     helpbutton.mousePressed(howToPlay);
 
+    //Timer function
     setInterval(testing,1000);
     function testing() {
-        if(GameStarted && !paused) {
+        if(GameStarted && !paused && isAlive) {
             totalSeconds++;
             seconds++;
         }
@@ -123,7 +147,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.6.3-beta", width-70, height-10);
+        text("v0.6.4-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -133,7 +157,8 @@ function draw() {
         text("Shoot enemies to gain points", width-width/3, height/2-30);
         text("You lose health if enemies hit you", width-width/3, height/2);
         text("Regain health with healthpacks", width-width/3, height/2+30);
-        text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/3);
+        text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/2.5);
+        text("Press M to mute the music", width/2, height-height/3);
         //Makes the menu button only appear once
         if(!backbuttonexists) {
             backbutton = createButton('Main Menu');
@@ -281,6 +306,7 @@ function draw() {
         if(player.toDelete == false) {
             for(let i = 0; i < speedpower.length; i++) {
                 if(speedpower[i].hits(player)) {
+                    powerUpSound.play();
                     shootCD = 10;
                     setTimeout(function () { shootCD = 30 }, 5000)
                     lastSP = frameAmount;
@@ -342,7 +368,7 @@ function draw() {
             player.damage = function() {};
             player.score = function() {};
             if(isAlive == true) {
-                jebno.play();
+                loseSound.play();
                 isAlive = false;
             }
         }

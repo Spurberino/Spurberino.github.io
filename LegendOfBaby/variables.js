@@ -37,8 +37,12 @@ let bouncerRimg;
 let bouncerLimg;
 let healthpackimg;
 //sounds
-let oof
-let jebno
+let damageSound;
+let loseSound;
+let powerUpSound;
+let healSound;
+let song;
+let songmuted = false;
 let wavenumber = 1;
 let newwave = false;
 let paused = false;

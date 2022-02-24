@@ -26,11 +26,12 @@ class Player {
 
         this.damage = function() {
             this.hp--;
-            oof.play();
+            damageSound.play();
         }
 
         this.heal = function (){
             this.hp++;
+            healSound.play();
         }
 
 
