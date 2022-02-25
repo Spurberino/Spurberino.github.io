@@ -102,8 +102,8 @@ function setup() {
     }
 
     //Pause function event listener
-    window.addEventListener('keydown', function (e) {
-        var key = e.key;
+    window.addEventListener('keydown', function (p) {
+        var key = p.key;
         if (key === 'p') {
             togglePause();
             textSize(48);
@@ -122,9 +122,9 @@ function setup() {
     helpbutton.mousePressed(howToPlay);
 
     //Timer function
-    setInterval(testing,1000);
-    function testing() {
-        if(GameStarted && !paused && isAlive) {
+    setInterval(timer,1000);
+    function timer() {
+        if(GameStarted && !paused && isAlive && !wavecheckpoint) {
             totalSeconds++;
             seconds++;
         }
@@ -148,7 +148,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.6.4-beta", width-70, height-10);
+        text("v0.6.5-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -169,7 +169,6 @@ function draw() {
         backbutton.position(width/2-60, height-height/4)
     }
 
-    //Start menu
     if(GameStarted) {
         //Pause
         if (paused) return;
@@ -240,10 +239,8 @@ function draw() {
             bullets[i].shoot();
             for (let j = 0; j < chasers.length; j++) {
                 if (bullets[i].hits(chasers[j])) {
-                    //console.log("Hit!");
                     chasers[j].damage();
                     bullets[i].disappear();
-                    //console.log("Chaser hp:", chasers[j].hp);
                 }
                 if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height) {
                     bullets[i].disappear();
@@ -251,10 +248,8 @@ function draw() {
             }
             for (let j = 0; j < bouncers.length; j++) {
                 if (bullets[i].hits(bouncers[j])) {
-                    //console.log("Hit!");
                     bouncers[j].damage();
                     bullets[i].disappear();
-                    //console.log("Bouncer hp:", bouncers[j].hp);
                 }
                 
                 if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height) {
@@ -268,18 +263,14 @@ function draw() {
             if (frameAmount > lastdmg+dmgCD) {
                 for (let i = 0; i < chasers.length; i++) {
                     if (chasers[i].hits(player)) {
-                        //console.log("Hit!");
                         player.damage();
-                        //console.log("Player hp:", player.hp);
                         lastdmg = frameAmount;
                         background(255, 0, 0);
                     }
                 }
                 for (let i = 0; i < bouncers.length; i++) {
                     if (bouncers[i].hits(player)) {
-                        //console.log("Hit!");
                         player.damage();
-                        //console.log("Player hp:", player.hp);
                         lastdmg = frameAmount;
                         background(255, 0, 0);
                     }
@@ -292,9 +283,7 @@ function draw() {
             if(player.hp < playermaxhp) {
                 for (let i = 0; i < hpacks.length; i++) {
                     if (hpacks[i].hits(player)) {
-                        //console.log("Heal!");
                         player.heal();
-                        //console.log("Player hp:", player.hp);
                         lastheal = frameAmount;
                         hpackactive = false;
                         background(0, 255, 0, 100);
@@ -409,9 +398,14 @@ function draw() {
         if(chasers.length < 1 && bouncers.length < 1) {
             fill(255);
             text(`Wave ${wavenumber} completed!`, width/2, height/2);
-            if (!newwave) {
+            text("Press Space to go to next wave", width/2, height-height/2.5);
+            wavecheckpoint = true;
+            //note: this makes health spawn before SP if you pick both up between waves
+            //maybe find other solution?
+            lastSP++;
+            lastheal++;
+            if (!newwave && keyIsPressed && keyCode === 32) {
                 newwave = true;
-
                 setTimeout(function () {
                     bamount = bamount + 3;
                     camount = camount + 1;
@@ -426,9 +420,10 @@ function draw() {
                         bouncers[i] = new Bouncer(random(0+10, width-10), random(0+10, height-10), bouncerhp, random(5, 10));
                     }
                     newwave = false;
+                    wavecheckpoint = false;
                     //Add extra score on wave completed?
                     //score = score+10
-                }, 2000);
+                }, 500);
             }
         }
 

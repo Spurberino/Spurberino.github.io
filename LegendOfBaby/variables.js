@@ -45,6 +45,7 @@ let song;
 let songmuted = false;
 let wavenumber = 1;
 let newwave = false;
+let wavecheckpoint = false;
 let paused = false;
 let isAlive = true;
 //timer
