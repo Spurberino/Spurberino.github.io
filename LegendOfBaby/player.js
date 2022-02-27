@@ -13,7 +13,6 @@ class Player {
             fill(255, 172, 168, this.opacity);
             ellipse(this.location.x, this.location.y, this.r * 2);
             image(playerimg ,this.location.x+1, this.location.y, this.r*2.5, this.r*2.5);
-            
         }
 
         this.move = function () {
@@ -34,15 +33,10 @@ class Player {
             healSound.play();
         }
 
-
         this.health = function() {
             if (this.hp <= 0) {
                 this.toDelete = true;
             }
-        }
-
-        this.score = function() {
-            score++;
         }
     }
 }

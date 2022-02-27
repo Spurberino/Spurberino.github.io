@@ -52,3 +52,10 @@ let isAlive = true;
 let minutes = 0;
 let seconds = 0;
 let totalSeconds = 0;
+//shop prices
+let pluslifeprice = 20;
+let playerspeedprice = 20;
+let damageprice = 30;
+
+//shop strings
+let nomoreupgradetxt = "You cannot upgrade this anymore";

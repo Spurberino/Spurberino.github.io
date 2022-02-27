@@ -1,82 +1,3 @@
-//NOTE: Check if player.toDelete does anything??
-function preload() {
-    //images
-    playerimg = loadImage('img/player.png');
-    bulletimg = loadImage('img/bullet.png');
-    chaserimg = loadImage('img/chaser.png');
-    bouncerRimg = loadImage('img/bouncer-right.png');
-    bouncerLimg = loadImage('img/bouncer-left.png');
-    healthpackimg = loadImage('img/healthpack.png');
-    backgroundimg = loadImage('img/background.png');
-    powerupspeedimg = loadImage('img/powerupspeed.png');
-    //sounds
-    damageSound = loadSound('sound/damagesound.wav');
-    loseSound = loadSound('sound/losesound.mp3');
-    powerUpSound = loadSound('sound/powerUp.wav');
-    healSound = loadSound('sound/healsound.wav');
-    //song credit: A Bit Of Hope by David Fesliyan https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6
-    song = loadSound('sound/song.mp3');
-}
-
-//Pause function
-function togglePause() {
-    if (!paused) {
-        paused = true;
-        song.pause();
-    } else if (paused) {
-       paused = false;
-       song.loop();
-    }
-}
-
-//What happens when you press the start button
-function startGame() {
-    GameStarted = true;
-    removeElements();
-    song.loop();
-}
-//what happens when you press the 'How to play' button
-function howToPlay() {
-    HowToPlay = true;
-    removeElements();
-}
-//What happens when you press the 'Main menu' button
-function mainMenu() {
-    HowToPlay = false;
-    removeElements();
-    backbuttonexists = false;
-    startbutton = createButton('Start Game');
-    startbutton.mousePressed(startGame);
-    helpbutton = createButton('How To Play');
-    helpbutton.mousePressed(howToPlay);
-}
-
-//makes timer always have two numbers for seconds and minutes
-function pad(val) {
-    var valString = val + "";
-    if (valString.length < 2) {
-        return "0" + valString;
-    } else {
-        return valString;
-    }
-}
-
-function mutesong() {
-    if(!songmuted){
-        song.setVolume(0);
-        songmuted = true;
-    } else {
-        song.setVolume(0.2);
-        songmuted = false;
-    }
-}
-
-function keyPressed() {
-    if(key === "m"){
-        mutesong();
-    }
-}
-
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
@@ -100,22 +21,8 @@ function setup() {
     for (let i = 0; i < hamount; i++) {
         speedpower[i] = new PowerupSpeed(random(width),random(height))
     }
-
-    //Pause function event listener
-    window.addEventListener('keydown', function (p) {
-        var key = p.key;
-        if (key === 'p') {
-            togglePause();
-            textSize(48);
-            stroke(0);
-            strokeWeight(5);
-            fill(255);
-            text("Game Paused", width/2, height/2);
-        }
-    });
     
     //Menu buttons
-    console.log(textSize);
     startbutton = createButton('Start Game');
     startbutton.mousePressed(startGame);
     helpbutton = createButton('How To Play');
@@ -137,8 +44,8 @@ function draw() {
         resizeCanvas(windowWidth, windowHeight);
         background(backgroundimg);
         strokeWeight(0);
-        startbutton.position((2*width/5)-60, height/2);
-        helpbutton.position(width-(2*width/5)-60, height/2)
+        startbutton.position((2*width/5)-65, height/2);
+        helpbutton.position(width-(2*width/5)-65, height/2);
         textAlign(CENTER);
         fill(255);
         textSize(72);
@@ -148,7 +55,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.6.5-beta", width-70, height-10);
+        text("v0.7.0-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -166,7 +73,7 @@ function draw() {
             backbutton.mousePressed(mainMenu);
             backbuttonexists = true;
         }
-        backbutton.position(width/2-60, height-height/4)
+        backbutton.position(width/2-65, height-height/4)
     }
 
     if(GameStarted) {
@@ -199,7 +106,6 @@ function draw() {
         player.show();
         player.move();
         player.health();
-
 
         //Enables healthpacks
         if(frameAmount >= hpCD + lastheal) {
@@ -330,14 +236,14 @@ function draw() {
         for (let j = chasers.length-1; j >= 0; j--) {
             if (chasers[j].toDelete) {
                 chasers.splice(j, 1);
-                player.score();
+                Score();
             }
         }
 
         for (let j = bouncers.length-1; j >= 0; j--) {
             if (bouncers[j].toDelete) {
                 bouncers.splice(j, 1);
-                player.score();
+                Score();
             }
         }
     
@@ -345,19 +251,18 @@ function draw() {
             player.hp = 0;
         }
 
-        if (player.toDelete) {
+        if(player.toDelete) {
             strokeWeight(0);
             textSize(52);
             fill(255);
             text("You died", width/2, height/2);
-            text(`Final score: ${score}`, width/2, height/2+50);
+            text(`You made it to wave ${wavenumber} in ${minutes} minutes and ${seconds} seconds!`, width/2, height/2+50);
             player.opacity = 0;
             player.strokeWeight = 0;
             playerimg = loadImage('img/empty.png');
             player.move = function() {};
             player.damage = function() {};
-            player.score = function() {};
-            if(isAlive == true) {
+            if(isAlive === true) {
                 loseSound.play();
                 isAlive = false;
             }
@@ -404,6 +309,7 @@ function draw() {
             //maybe find other solution?
             lastSP++;
             lastheal++;
+            enterShop();
             if (!newwave && keyIsPressed && keyCode === 32) {
                 newwave = true;
                 setTimeout(function () {
@@ -421,6 +327,8 @@ function draw() {
                     }
                     newwave = false;
                     wavecheckpoint = false;
+                    shop = false;
+                    removeElements();
                     //Add extra score on wave completed?
                     //score = score+10
                 }, 500);
