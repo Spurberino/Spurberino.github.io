@@ -43,7 +43,7 @@ function howToPlay() {
     HowToPlay = true;
     removeElements();
 }
-function buyLife() {
+function buyMaxLife() {
     if(score>=pluslifeprice){
         playermaxhp++;
         score = score-pluslifeprice;
@@ -65,13 +65,37 @@ function buyDamage() {
         damageprice = damageprice+40;
     }
 }
+function buyBulletSpeed() {
+    if(score>=bulletspeedprice){
+        bulletspeed = bulletspeed*1.05;
+        score = score-bulletspeedprice;
+        bulletspeedprice = bulletspeedprice+5;
+        //might be shit - rebalance this?
+    }
+}
+function buyShootSpeed() {
+    if(score>=shootspeedprice){
+        shootCD = shootCD*0.95;
+        score = score-shootspeedprice;
+        shootspeedprice = shootspeedprice+10;
+        //might be OP - check if price should be higher?
+        //maybe cap max shootspeed
+    }
+}
+function buyLife() {
+    if(score>=healprice && player.hp < playermaxhp){
+        player.heal();
+        score = score-healprice;
+        //don't know if price should increase
+    }
+}
 
 function enterShop() {
     removeElements();
-    buyLifeButton = createButton(`+1 max life for ${pluslifeprice} score`);
-    buyLifeButton.addClass("shop");
-    buyLifeButton.mousePressed(buyLife);
-    buyLifeButton.position(width/3-80,height/4);
+    buyMaxLifeButton = createButton(`+1 max life for ${pluslifeprice} score`);
+    buyMaxLifeButton.addClass("shop");
+    buyMaxLifeButton.mousePressed(buyMaxLife);
+    buyMaxLifeButton.position(width/3-80,height/4);
     buyMoveSpeedButton = createButton(`Increase your movement speed for ${playerspeedprice} score`);
     buyMoveSpeedButton.addClass("shop");
     buyMoveSpeedButton.mousePressed(buyMoveSpeed);
@@ -84,6 +108,18 @@ function enterShop() {
     buyDamageButton.addClass("shop");
     buyDamageButton.mousePressed(buyDamage);
     buyDamageButton.position(width-width/3-80,height/4);
+    buyBulletSpeedButton = createButton(`Increase the speed of your bullets for ${bulletspeedprice} score`);
+    buyBulletSpeedButton.addClass("shop");
+    buyBulletSpeedButton.mousePressed(buyBulletSpeed);
+    buyBulletSpeedButton.position(width/2-80,height-height/4);
+    buyShootSpeedButton = createButton(`Increase your shooting speed for ${shootspeedprice} score`);
+    buyShootSpeedButton.addClass("shop");
+    buyShootSpeedButton.mousePressed(buyShootSpeed);
+    buyShootSpeedButton.position(width-width/3-80,height-height/4);
+    buyLifeButton = createButton(`Heal once for ${healprice} score`);
+    buyLifeButton.addClass("shop");
+    buyLifeButton.mousePressed(buyLife);
+    buyLifeButton.position(width/3-80,height-height/4);
 }
 //What happens when you press the 'Main menu' button
 function mainMenu() {

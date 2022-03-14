@@ -55,7 +55,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.7.0-beta", width-70, height-10);
+        text("v0.7.1-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -203,8 +203,8 @@ function draw() {
             for(let i = 0; i < speedpower.length; i++) {
                 if(speedpower[i].hits(player)) {
                     powerUpSound.play();
-                    shootCD = 10;
-                    setTimeout(function () { shootCD = 30 }, 5000)
+                    shootCD = shootCD/3;
+                    setTimeout(function () { shootCD = shootCD*3 }, 5000)
                     lastSP = frameAmount;
                     spactive = false;
                     background(255, 191, 0, 100);
@@ -285,10 +285,13 @@ function draw() {
             player.location.y = player.location.y - player.speed;
         }
 
+        //These spawn kind of independently from the first wave of them. Think of fix?
         //Healthpack spawns
-        if(frameAmount > lastheal + hpCD && hpackactive == false) {
+        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks < 5) {
             for (let i = 0; i < hamount; i++) {
                 hpacks[i] = new Healthpack(random(width), random(height));
+                //attempt to limit amount of healthpacks per wave
+                wavehpacks++;
             }
         }
 
@@ -317,6 +320,7 @@ function draw() {
                     camount = camount + 1;
                     lastdmg = frameAmount;
                     wavenumber++;
+                    wavehpacks = 0;
                     
                     for (let i = 0; i < camount; i++) {
                         chasers[i] = new Chaser(random(width), random(height), chaserhp, random(50, 150));

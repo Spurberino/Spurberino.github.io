@@ -17,6 +17,7 @@ let dmgCD = 90;
 let hpCD = 600;
 let spCD = 900;
 let playerhp = 5;
+let bulletspeed = 10;
 let score = 0;
 let chaserhp = 4;
 let bouncerhp = 2;
@@ -48,14 +49,18 @@ let newwave = false;
 let wavecheckpoint = false;
 let paused = false;
 let isAlive = true;
+let wavehpacks = 0;
 //timer
 let minutes = 0;
 let seconds = 0;
 let totalSeconds = 0;
 //shop prices
 let pluslifeprice = 20;
+let healprice = 30;
 let playerspeedprice = 20;
 let damageprice = 30;
+let bulletspeedprice = 20;
+let shootspeedprice = 30;
 
 //shop strings
 let nomoreupgradetxt = "You cannot upgrade this anymore";

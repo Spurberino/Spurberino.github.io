@@ -3,7 +3,7 @@ class Bullet {
         this.x = x;
         this.y = y;
         this.r = 15;
-        this.s = 10;
+        this.s = bulletspeed;
         this.dir = createVector(dir.x,dir.y);
         this.toDelete = false;
 
