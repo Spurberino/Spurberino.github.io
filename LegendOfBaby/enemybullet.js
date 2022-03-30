@@ -1,22 +1,22 @@
-class Bullet {
-    constructor(x, y, dir){
+class Enemybullet {
+    constructor(x, y){
         this.x = x;
         this.y = y;
         this.r = 15;
         this.s = bulletspeed;
-        this.dir = createVector(dir.x,dir.y);
+        this.dir = createVector(player.location.x, player.location.y);
         this.toDelete = false;
 
         this.show = function(){
             strokeWeight(0)
             fill(64, 125, 247);
             ellipse(this.x, this.y, this.r * 2);
-            image(bulletimg ,this.x+1, this.y, this.r*2.3, this.r*2.3);
+            image(enemybulletimg ,this.x+1, this.y, this.r*2.3, this.r*2.3);
         };
 
         this.shoot = function(){
-            this.y += this.dir.y*this.s;
             this.x += this.dir.x*this.s;
+            this.y += this.dir.y*this.s;
         };
 
         this.hits = function(enemy){
@@ -33,3 +33,4 @@ class Bullet {
         };
     }
 }
+

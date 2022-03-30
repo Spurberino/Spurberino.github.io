@@ -1,8 +1,11 @@
 function preload() {
     //images
     playerimg = loadImage('img/player.png');
+    playerspeed = loadImage('img/playerspeedpower.png');
     bulletimg = loadImage('img/bullet.png');
+    enemybulletimg = loadImage('img/enemybullet.png');
     chaserimg = loadImage('img/chaser.png');
+    shooterimg = loadImage('img/shooter.png');
     bouncerRimg = loadImage('img/bouncer-right.png');
     bouncerLimg = loadImage('img/bouncer-left.png');
     healthpackimg = loadImage('img/healthpack.png');
@@ -22,9 +25,16 @@ function togglePause() {
     if (!paused) {
         paused = true;
         song.pause();
+        if(speedpoweron) {
+            pausetime = Date.now() - starttime;
+            clearTimeout(timeoutID);
+        }
     } else if (paused) {
        paused = false;
        song.loop();
+        if(speedpoweron) {
+            timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, 5000-pausetime);
+        }
     }
 }
 
@@ -92,14 +102,17 @@ function buyLife() {
 
 function enterShop() {
     removeElements();
+    //Increase max hp
     buyMaxLifeButton = createButton(`+1 max life for ${pluslifeprice} score`);
     buyMaxLifeButton.addClass("shop");
     buyMaxLifeButton.mousePressed(buyMaxLife);
     buyMaxLifeButton.position(width/3-80,height/4);
+    //Increase move speed
     buyMoveSpeedButton = createButton(`Increase your movement speed for ${playerspeedprice} score`);
     buyMoveSpeedButton.addClass("shop");
     buyMoveSpeedButton.mousePressed(buyMoveSpeed);
     buyMoveSpeedButton.position(width/2-80,height/4);
+    //Increase bullet damage
     if(bulletdamage <= 2) {
         buyDamageButton = createButton(`Double your damage for ${damageprice} score`);
     } else {
@@ -108,14 +121,17 @@ function enterShop() {
     buyDamageButton.addClass("shop");
     buyDamageButton.mousePressed(buyDamage);
     buyDamageButton.position(width-width/3-80,height/4);
+    //Increase bullet speed
     buyBulletSpeedButton = createButton(`Increase the speed of your bullets for ${bulletspeedprice} score`);
     buyBulletSpeedButton.addClass("shop");
     buyBulletSpeedButton.mousePressed(buyBulletSpeed);
     buyBulletSpeedButton.position(width/2-80,height-height/4);
+    //Increase shooting speed
     buyShootSpeedButton = createButton(`Increase your shooting speed for ${shootspeedprice} score`);
     buyShootSpeedButton.addClass("shop");
     buyShootSpeedButton.mousePressed(buyShootSpeed);
     buyShootSpeedButton.position(width-width/3-80,height-height/4);
+    //Buy one life
     buyLifeButton = createButton(`Heal once for ${healprice} score`);
     buyLifeButton.addClass("shop");
     buyLifeButton.mousePressed(buyLife);
@@ -162,6 +178,9 @@ function keyPressed() {
         stroke(0);
         strokeWeight(5);
         fill(255);
+        background(20, 20, 20, 125);
         text("Game Paused", width/2, height/2);
+        textSize(30);
+        text("Press P to unpause", width/2, height/2+50);
     }
 }

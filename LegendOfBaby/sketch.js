@@ -13,12 +13,16 @@ function setup() {
     for (let i = 0; i < camount; i++) {
         chasers[i] = new Chaser(random(width), random(height), chaserhp, 150);
     }
+    
+    for (let i = 0; i < samount; i++) {
+        shooters[i] = new Shooter(random(width), random(height), shooterhp);
+    }
 
     for (let i = 0; i < hamount; i++) {
         hpacks[i] = new Healthpack(random(width), random(height));
     }
 
-    for (let i = 0; i < hamount; i++) {
+    for (let i = 0; i < spamount; i++) {
         speedpower[i] = new PowerupSpeed(random(width),random(height))
     }
     
@@ -55,7 +59,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.7.1-beta", width-70, height-10);
+        text("v0.8.0-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -132,6 +136,13 @@ function draw() {
             chasers[i].health();
         }
 
+        //Enables Shooters
+        for (let i = 0; i < shooters.length; i++) {
+            shooters[i].show();
+            shooters[i].move();
+            shooters[i].health();
+        }
+
         //Enables Bouncers
         for (let i = 0; i < bouncers.length; i++) {
             bouncers[i].show();
@@ -143,22 +154,25 @@ function draw() {
         for (let i = 0; i < bullets.length; i++) {
             bullets[i].show();
             bullets[i].shoot();
+            if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height) {
+                bullets[i].disappear();
+            }
             for (let j = 0; j < chasers.length; j++) {
                 if (bullets[i].hits(chasers[j])) {
                     chasers[j].damage();
                     bullets[i].disappear();
                 }
-                if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height) {
-                    bullets[i].disappear();
-                }
+                
             }
             for (let j = 0; j < bouncers.length; j++) {
                 if (bullets[i].hits(bouncers[j])) {
                     bouncers[j].damage();
                     bullets[i].disappear();
                 }
-                
-                if (bullets[i].x < 0 || bullets[i].x > width || bullets[i].y < 0 || bullets[i].y > height) {
+            }
+            for (let j = 0; j < shooters.length; j++) {
+                if (bullets[i].hits(shooters[j])) {
+                    shooters[j].damage();
                     bullets[i].disappear();
                 }
             }
@@ -204,10 +218,12 @@ function draw() {
                 if(speedpower[i].hits(player)) {
                     powerUpSound.play();
                     shootCD = shootCD/3;
-                    setTimeout(function () { shootCD = shootCD*3 }, 5000)
+                    starttime = Date.now();
                     lastSP = frameAmount;
                     spactive = false;
+                    speedpoweron = true;
                     background(255, 191, 0, 100);
+                    timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, 5000)
                 }
             }
         }
@@ -243,6 +259,13 @@ function draw() {
         for (let j = bouncers.length-1; j >= 0; j--) {
             if (bouncers[j].toDelete) {
                 bouncers.splice(j, 1);
+                Score();
+            }
+        }
+ 
+        for (let j = shooters.length-1; j >= 0; j--) {
+            if (shooters[j].toDelete) {
+                shooters.splice(j, 1);
                 Score();
             }
         }
@@ -303,12 +326,12 @@ function draw() {
         }
 
         //New wave
-        if(chasers.length < 1 && bouncers.length < 1) {
+        if(chasers.length < 1 && bouncers.length < 1 && shooters.length < 1) {
             fill(255);
             text(`Wave ${wavenumber} completed!`, width/2, height/2);
             text("Press Space to go to next wave", width/2, height-height/2.5);
             wavecheckpoint = true;
-            //note: this makes health spawn before SP if you pick both up between waves
+            //note: this maybe makes health spawn before SP if you pick both up between waves
             //maybe find other solution?
             lastSP++;
             lastheal++;
@@ -318,6 +341,7 @@ function draw() {
                 setTimeout(function () {
                     bamount = bamount + 3;
                     camount = camount + 1;
+                    samount = samount+(wavenumber-1)%2;
                     lastdmg = frameAmount;
                     wavenumber++;
                     wavehpacks = 0;
@@ -328,6 +352,10 @@ function draw() {
                     
                     for (let i = 0; i < bamount; i++) {
                         bouncers[i] = new Bouncer(random(0+10, width-10), random(0+10, height-10), bouncerhp, random(5, 10));
+                    }
+
+                    for (let i = 0; i < samount; i++) {
+                        shooters[i] = new Shooter(random(width), random(height), shooterhp);
                     }
                     newwave = false;
                     wavecheckpoint = false;

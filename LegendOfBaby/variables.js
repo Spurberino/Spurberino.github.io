@@ -4,12 +4,14 @@ let bullets = [];
 let bouncers = [];
 let hpacks = [];
 let speedpower = [];
+let shooters = [];
 let lastShot = 0;
 let lastdmg = 0;
 let lastheal = 0;
 let lastSP = 0;
 let camount = 1;
 let bamount = 3;
+let samount = 1;
 let hamount = 1;
 let spamount = 1;
 let shootCD = 30;
@@ -21,6 +23,7 @@ let bulletspeed = 10;
 let score = 0;
 let chaserhp = 4;
 let bouncerhp = 2;
+let shooterhp = 4;
 let bulletdamage = 1;
 let GameStarted = false;
 let HowToPlay = false;
@@ -64,3 +67,9 @@ let shootspeedprice = 30;
 
 //shop strings
 let nomoreupgradetxt = "You cannot upgrade this anymore";
+
+//lets the speed powerup work with pausing
+let timeoutID;
+let starttime;
+let pausetime;
+let speedpoweron = false;

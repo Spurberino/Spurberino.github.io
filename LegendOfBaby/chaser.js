@@ -11,7 +11,7 @@ class Chaser {
             strokeWeight(2);
             fill(89, 133, 133);
             ellipse(this.x, this.y, this.r * 2);
-            image(chaserimg ,this.x+1, this.y, this.r*2.5, this.r*2.5);
+            image(chaserimg ,this.x, this.y, this.r*2.5, this.r*2.5);
         }
 
         this.move = function() {
