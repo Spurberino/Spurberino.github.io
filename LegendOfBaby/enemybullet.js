@@ -1,12 +1,9 @@
 class Enemybullet {
-    constructor(x, y, target) {
+    constructor(x, y, vector) {
         this.location = createVector(x, y);
-        //this.x = x;
-        //this.y = y;
         this.r = 15;
         this.s = 10;
-        this.target = target;
-        //this.dir = dir //createVector(player.location.x, player.location.y);
+        this.vector = vector;
         this.toDelete = false;
 
         this.show = function(){
@@ -17,21 +14,13 @@ class Enemybullet {
         }
 
         this.shoot = function(){
-            //this.location.x += this.dir.x+this.s;
-            //this.location.y += this.dir.y+this.s;
-            //let targetX = player.location.x;
-            //let targetY = player.location.y;
-            let vector = createVector(this.location.x - this.target.x, this.location.y - this.target.y);
-            vector.normalize();
-            //this.location = this.location.sub(vector.mult(this.s));
-            
-            this.location.x -= vector.x*this.s;
-            this.location.y -= vector.y*this.s;
+            this.vector.normalize();
+            this.location = this.location.sub(vector.mult(this.s));
         }
 
-        /*this.hits = function(enemy){
-            let d = dist(this.x, this.y, enemy.x || enemy.location.x, enemy.y || enemy.location.y);
-            if (d < this.r + enemy.r){
+        this.hits = function(player){
+            let d = dist(this.location.x, this.location.y, player.location.x, player.location.y);
+            if (d < this.r + player.r){
               return true;
             } else {
               return false;
@@ -40,7 +29,7 @@ class Enemybullet {
 
         this.disappear = function(){
             this.toDelete = true;
-        }*/
+        }
     }
 }
 

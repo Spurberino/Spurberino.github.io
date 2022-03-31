@@ -1,11 +1,11 @@
 class Shooter {
-    constructor(x, y, hp) {
+    constructor(x, y, hp, shootspeed) {
         this.location = createVector(x, y);
-        //this.x = x;
-        //this.y = y;
         this.r = 25;
         this.hp = hp;
         this.speed = 3;
+        this.shotactive = false;
+        this.shootspeed = shootspeed;
         this.toDelete = false;
 
         this.show = function() {
@@ -21,6 +21,7 @@ class Shooter {
             let d = dist(this.location.x, this.location.y, targetX, targetY)
             let vector = createVector(this.location.x - targetX, this.location.y - targetY);
             vector.normalize();
+            this.vector = vector;
             if(d <= 300){
                 this.location = this.location.add(vector.mult(this.speed));
             } else if (d >= 350){
@@ -42,12 +43,8 @@ class Shooter {
         }
 
         this.shoot = function() {
-            //let dir = createVector(player.location.x, player.location.y);
-            let target = createVector(player.location.x, player.location.y);
-            let enemybullet = new Enemybullet(this.location.x, this.location.y, target);
+            let enemybullet = new Enemybullet(this.location.x, this.location.y, this.vector);
             enemybullets.push(enemybullet);
-            console.log(enemybullets);
-            //enemybullets.push(new Bullet(this.location.x, this.location.y, this.r));
         }
 
         this.health = function() {
@@ -60,7 +57,6 @@ class Shooter {
             this.hp = this.hp-bulletdamage;
         }
 
-        
         this.hits = function(player){
             let d = dist(this.location.x, this.location.y, player.location.x, player.location.y);
             if (d < this.r + player.r){

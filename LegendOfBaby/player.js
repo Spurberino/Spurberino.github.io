@@ -13,7 +13,7 @@ class Player {
             fill(255, 172, 168, this.opacity);
             ellipse(this.location.x, this.location.y, this.r * 2);
             image(playerimg, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
-            if(speedpoweron){
+            if(speedpoweron && !this.toDelete){
                 image(playerspeed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
             }
         }

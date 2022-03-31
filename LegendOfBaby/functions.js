@@ -183,9 +183,4 @@ function keyPressed() {
         textSize(30);
         text("Press P to unpause", width/2, height/2+50);
     }
-    if (key === 'q') {
-        for(let i = 0; i < shooters.length; i++){
-        shooters[i].shoot();
-        }
-    }
 }

@@ -15,7 +15,7 @@ function setup() {
     }
     
     for (let i = 0; i < samount; i++) {
-        shooters[i] = new Shooter(random(width), random(height), shooterhp);
+        shooters[i] = new Shooter(random(width), random(height), shooterhp, random(2000, 4000));
     }
 
     for (let i = 0; i < hamount; i++) {
@@ -136,6 +136,13 @@ function draw() {
             chasers[i].health();
         }
 
+        //Enables Bouncers
+        for (let i = 0; i < bouncers.length; i++) {
+            bouncers[i].show();
+            bouncers[i].move();
+            bouncers[i].health();
+        }
+        
         //Enables Shooters
         for (let i = 0; i < shooters.length; i++) {
             shooters[i].show();
@@ -148,14 +155,7 @@ function draw() {
             enemybullets[i].show();
             enemybullets[i].shoot();
         }
-
-        //Enables Bouncers
-        for (let i = 0; i < bouncers.length; i++) {
-            bouncers[i].show();
-            bouncers[i].move();
-            bouncers[i].health();
-        }
-
+        
         //If bullet hits enemy they take damage
         for (let i = 0; i < bullets.length; i++) {
             bullets[i].show();
@@ -197,6 +197,18 @@ function draw() {
                 for (let i = 0; i < bouncers.length; i++) {
                     if (bouncers[i].hits(player)) {
                         player.damage();
+                        lastdmg = frameAmount;
+                        background(255, 0, 0);
+                    }
+                }
+
+                for (let i = 0; i < enemybullets.length; i++) {
+                    if (enemybullets[i].location.x < 0 || enemybullets[i].location.x > width || enemybullets[i].location.y < 0 || enemybullets[i].location.y > height) {
+                        enemybullets[i].disappear();
+                    }
+                    if (enemybullets[i].hits(player)) {
+                        player.damage();
+                        enemybullets[i].disappear();
                         lastdmg = frameAmount;
                         background(255, 0, 0);
                     }
@@ -275,6 +287,12 @@ function draw() {
                 Score();
             }
         }
+
+        for (let j = enemybullets.length-1; j >= 0; j--) {
+            if (enemybullets[j].toDelete) {
+                enemybullets.splice(j, 1);
+            }
+        }
     
         if(player.hp < 0) {
             player.hp = 0;
@@ -316,11 +334,11 @@ function draw() {
 
         //These spawn kind of independently from the first wave of them. Think of fix?
         //Healthpack spawns
-        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks < 5) {
+        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks <= 0) {
             for (let i = 0; i < hamount; i++) {
                 hpacks[i] = new Healthpack(random(width), random(height));
                 //attempt to limit amount of healthpacks per wave
-                wavehpacks++;
+                wavehpacks--;
             }
         }
 
@@ -328,6 +346,20 @@ function draw() {
         if(frameAmount > lastSP + spCD && spactive == false) {
             for (let i = 0; i < spamount; i++) {
                 speedpower[i] = new PowerupSpeed(random(width), random(height));
+            }
+        }
+
+        //Shooter attacking
+        for(let i = 0; i < shooters.length; i++){
+            if(shooters[i].shotactive == false) {
+                shooters[i].shotactive = true;
+                //setTimeout still runs while game is paused, fix!
+                setTimeout(function() {
+                    if(shooters[i] && isAlive) {
+                        shooters[i].shoot();
+                        shooters[i].shotactive = false;
+                    }
+                }, shooters[i].shootspeed);
             }
         }
 
@@ -350,7 +382,7 @@ function draw() {
                     samount = samount+(wavenumber-1)%2;
                     lastdmg = frameAmount;
                     wavenumber++;
-                    wavehpacks = 0;
+                    wavehpacks = 3;
                     
                     for (let i = 0; i < camount; i++) {
                         chasers[i] = new Chaser(random(width), random(height), chaserhp, random(50, 150));
@@ -361,7 +393,7 @@ function draw() {
                     }
 
                     for (let i = 0; i < samount; i++) {
-                        shooters[i] = new Shooter(random(width), random(height), shooterhp);
+                        shooters[i] = new Shooter(random(width), random(height), shooterhp, random(2000, 4000));
                     }
                     newwave = false;
                     wavecheckpoint = false;

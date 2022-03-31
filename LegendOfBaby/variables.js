@@ -53,7 +53,7 @@ let newwave = false;
 let wavecheckpoint = false;
 let paused = false;
 let isAlive = true;
-let wavehpacks = 0;
+let wavehpacks = 3;
 //timer
 let minutes = 0;
 let seconds = 0;
