@@ -12,7 +12,10 @@ class Player {
             strokeWeight(this.strokeWeight);
             fill(255, 172, 168, this.opacity);
             ellipse(this.location.x, this.location.y, this.r * 2);
-            image(playerimg ,this.location.x+1, this.location.y, this.r*2.5, this.r*2.5);
+            image(playerimg, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            if(speedpoweron && !this.toDelete){
+                image(playerspeed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            }
         }
 
         this.move = function () {
