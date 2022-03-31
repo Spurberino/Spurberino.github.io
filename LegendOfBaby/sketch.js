@@ -59,7 +59,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.8.1-beta", width-70, height-10);
+        text("v0.8.2-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -353,8 +353,8 @@ function draw() {
         for(let i = 0; i < shooters.length; i++){
             if(shooters[i].shotactive == false) {
                 shooters[i].shotactive = true;
-                //setTimeout still runs while game is paused, fix!
-                setTimeout(function() {
+                shooters[i].starttime = Date.now();
+                shooting = setTimeout(function() {
                     if(shooters[i] && isAlive) {
                         shooters[i].shoot();
                         shooters[i].shotactive = false;

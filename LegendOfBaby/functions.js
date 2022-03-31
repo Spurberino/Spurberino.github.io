@@ -29,11 +29,23 @@ function togglePause() {
             pausetime = Date.now() - starttime;
             clearTimeout(timeoutID);
         }
+        for(let i = 0; i < shooters.length; i++) {
+            shooters[i].pausetime = Date.now() - shooters[i].starttime;
+            clearTimeout(shooting);
+        }
     } else if (paused) {
        paused = false;
        song.loop();
         if(speedpoweron) {
             timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, 5000-pausetime);
+        }
+        for(let i = 0; i < shooters.length; i++) {
+            shooting = setTimeout(function() {
+                if(shooters[i] && isAlive) {
+                    shooters[i].shoot();
+                    shooters[i].shotactive = false;
+                }
+            }, shooters[i].shootspeed - shooters[i].pausetime);
         }
     }
 }
