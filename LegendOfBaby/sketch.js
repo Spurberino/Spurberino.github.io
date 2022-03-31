@@ -59,7 +59,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.8.0-beta", width-70, height-10);
+        text("v0.8.1-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -334,7 +334,7 @@ function draw() {
 
         //These spawn kind of independently from the first wave of them. Think of fix?
         //Healthpack spawns
-        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks <= 0) {
+        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks > 0) {
             for (let i = 0; i < hamount; i++) {
                 hpacks[i] = new Healthpack(random(width), random(height));
                 //attempt to limit amount of healthpacks per wave
