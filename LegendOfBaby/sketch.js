@@ -143,6 +143,12 @@ function draw() {
             shooters[i].health();
         }
 
+        //Enables enemybullets (WIP)
+        for (let i = 0; i < enemybullets.length; i++) {
+            enemybullets[i].show();
+            enemybullets[i].shoot();
+        }
+
         //Enables Bouncers
         for (let i = 0; i < bouncers.length; i++) {
             bouncers[i].show();

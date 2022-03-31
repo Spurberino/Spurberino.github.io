@@ -8,16 +8,16 @@ class Bullet {
         this.toDelete = false;
 
         this.show = function(){
-            strokeWeight(0)
+            strokeWeight(0);
             fill(64, 125, 247);
             ellipse(this.x, this.y, this.r * 2);
             image(bulletimg ,this.x+1, this.y, this.r*2.3, this.r*2.3);
-        };
+        }
 
         this.shoot = function(){
             this.y += this.dir.y*this.s;
             this.x += this.dir.x*this.s;
-        };
+        }
 
         this.hits = function(enemy){
             let d = dist(this.x, this.y, enemy.x || enemy.location.x, enemy.y || enemy.location.y);
@@ -26,10 +26,10 @@ class Bullet {
             } else {
               return false;
             }
-        };
+        }
 
         this.disappear = function(){
             this.toDelete = true;
-        };
+        }
     }
 }

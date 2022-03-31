@@ -41,6 +41,15 @@ class Shooter {
             }
         }
 
+        this.shoot = function() {
+            //let dir = createVector(player.location.x, player.location.y);
+            let target = createVector(player.location.x, player.location.y);
+            let enemybullet = new Enemybullet(this.location.x, this.location.y, target);
+            enemybullets.push(enemybullet);
+            console.log(enemybullets);
+            //enemybullets.push(new Bullet(this.location.x, this.location.y, this.r));
+        }
+
         this.health = function() {
             if (this.hp <= 0) {
                 this.toDelete = true;

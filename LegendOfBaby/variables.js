@@ -5,6 +5,7 @@ let bouncers = [];
 let hpacks = [];
 let speedpower = [];
 let shooters = [];
+let enemybullets = [];
 let lastShot = 0;
 let lastdmg = 0;
 let lastheal = 0;
