@@ -1,23 +1,28 @@
 function preload() {
     //images
-    playerimg = loadImage('img/player.png');
-    playerspeed = loadImage('img/playerspeedpower.png');
-    bulletimg = loadImage('img/bullet.png');
-    enemybulletimg = loadImage('img/enemybullet.png');
-    chaserimg = loadImage('img/chaser.png');
-    shooterimg = loadImage('img/shooter.png');
-    bouncerRimg = loadImage('img/bouncer-right.png');
-    bouncerLimg = loadImage('img/bouncer-left.png');
-    healthpackimg = loadImage('img/healthpack.png');
-    backgroundimg = loadImage('img/background.png');
-    powerupspeedimg = loadImage('img/powerupspeed.png');
+    playerimg = loadImage('assets/img/player.png');
+    playerspeed = loadImage('assets/img/playerspeedpower.png');
+    playerdamaged = loadImage('assets/img/playerdamaged.png');
+    playerhealed = loadImage('assets/img/playerhealed.png');
+    bulletimg = loadImage('assets/img/bullet.png');
+    enemybulletimg = loadImage('assets/img/enemybullet.png');
+    chaserimg = loadImage('assets/img/chaser.png');
+    shooterimg = loadImage('assets/img/shooter.png');
+    bouncerRimg = loadImage('assets/img/bouncer-right.png');
+    bouncerLimg = loadImage('assets/img/bouncer-left.png');
+    healthpackimg = loadImage('assets/img/healthpack.png');
+    backgroundimg = loadImage('assets/img/backgroundnew.png');
+    powerupspeedimg = loadImage('assets/img/powerupspeed.png');
     //sounds
-    damageSound = loadSound('sound/damagesound.wav');
-    loseSound = loadSound('sound/losesound.mp3');
-    powerUpSound = loadSound('sound/powerUp.wav');
-    healSound = loadSound('sound/healsound.wav');
+    damageSound = loadSound('assets/sound/damagesound.wav');
+    loseSound = loadSound('assets/sound/losesound.mp3');
+    powerUpSound = loadSound('assets/sound/powerUp.wav');
+    healSound = loadSound('assets/sound/healsound.wav');
+    pointSound = loadSound('assets/sound/point.wav');
     //song credit: A Bit Of Hope by David Fesliyan https://www.fesliyanstudios.com/royalty-free-music/download/a-bit-of-hope/565
-    song = loadSound('sound/song.mp3');
+    song = loadSound('assets/sound/song.mp3');
+    //fonts
+    font = loadFont('assets/fonts/EnchantedLand.otf');
 }
 
 //Pause function
@@ -37,7 +42,7 @@ function togglePause() {
        paused = false;
        song.loop();
         if(speedpoweron) {
-            timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, 5000-pausetime);
+            timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime-pausetime);
         }
         for(let i = 0; i < shooters.length; i++) {
             shooting = setTimeout(function() {
@@ -52,6 +57,7 @@ function togglePause() {
 
 function Score() {
     score++;
+    pointSound.play();
 }
 
 //What happens when you press the start button
@@ -95,6 +101,13 @@ function buyBulletSpeed() {
         //might be shit - rebalance this?
     }
 }
+function buySpeedPowerUpgrade() {
+    if(score>=speedpowerupgradeprice){
+        speedpowertime = speedpowertime+1000;
+        score = score-speedpowerupgradeprice;
+        speedpowerupgradeprice = speedpowerupgradeprice+5;
+    }
+}
 function buyShootSpeed() {
     if(score>=shootspeedprice){
         shootCD = shootCD*0.95;
@@ -133,11 +146,11 @@ function enterShop() {
     buyDamageButton.addClass("shop");
     buyDamageButton.mousePressed(buyDamage);
     buyDamageButton.position(width-width/3-80,height/4);
-    //Increase bullet speed
-    buyBulletSpeedButton = createButton(`Increase the speed of your bullets for ${bulletspeedprice} score`);
-    buyBulletSpeedButton.addClass("shop");
-    buyBulletSpeedButton.mousePressed(buyBulletSpeed);
-    buyBulletSpeedButton.position(width/2-80,height-height/4);
+    //Increase the time that the speed powerup lasts
+    buySpeedPowerUpgradeButton = createButton(`Add 1 second to lightning powerup for ${speedpowerupgradeprice} score`);
+    buySpeedPowerUpgradeButton.addClass("shop");
+    buySpeedPowerUpgradeButton.mousePressed(buySpeedPowerUpgrade);
+    buySpeedPowerUpgradeButton.position(width/2-80,height-height/4);
     //Increase shooting speed
     buyShootSpeedButton = createButton(`Increase your shooting speed for ${shootspeedprice} score`);
     buyShootSpeedButton.addClass("shop");

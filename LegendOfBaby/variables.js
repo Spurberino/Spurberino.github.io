@@ -33,6 +33,8 @@ let hpackactive = false;
 let spactive = false;
 let frameAmount = 0;
 let backbuttonexists = false;
+let damaged = false;
+let healed = false;
 //images
 let backgroundimg;
 let playerimg;
@@ -63,7 +65,7 @@ let pluslifeprice = 20;
 let healprice = 30;
 let playerspeedprice = 20;
 let damageprice = 30;
-let bulletspeedprice = 20;
+let speedpowerupgradeprice = 30;
 let shootspeedprice = 30;
 
 //shop strings
@@ -74,3 +76,4 @@ let timeoutID;
 let starttime;
 let pausetime;
 let speedpoweron = false;
+let speedpowertime = 5000;
