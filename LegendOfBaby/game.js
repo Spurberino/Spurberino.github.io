@@ -3,6 +3,7 @@ function setup() {
 
     imageMode(CENTER);
     song.setVolume(0.2);
+    pointSound.setVolume(0.6);
 
     player = new Player(playerhp);
 
@@ -20,6 +21,7 @@ function setup() {
 
     for (let i = 0; i < hamount; i++) {
         hpacks[i] = new Healthpack(random(width), random(height));
+        wavehpacks--;
     }
 
     for (let i = 0; i < spamount; i++) {
@@ -52,14 +54,16 @@ function draw() {
         helpbutton.position(width-(2*width/5)-65, height/2);
         textAlign(CENTER);
         fill(255);
-        textSize(72);
+        textSize(100);
         stroke(0);
         strokeWeight(5);
+        textFont(font);
         text("The Legend of Baby", width/2, height/3);
+        textFont('Arial');
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.8.2-beta", width-70, height-10);
+        text("v0.9.0-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -105,6 +109,7 @@ function draw() {
         textSize(36);
         text(`${pad(minutes)}:${pad(seconds)}`, width/3, 40);
         text(`Score: ${score}`, width-width/3, 40);
+        //text(`${int(player.location.x)} ${int(player.location.y)}`, width/2, 40);
 
         //Enables player
         player.show();
@@ -191,17 +196,14 @@ function draw() {
                     if (chasers[i].hits(player)) {
                         player.damage();
                         lastdmg = frameAmount;
-                        background(255, 0, 0);
                     }
                 }
                 for (let i = 0; i < bouncers.length; i++) {
                     if (bouncers[i].hits(player)) {
                         player.damage();
                         lastdmg = frameAmount;
-                        background(255, 0, 0);
                     }
                 }
-
                 for (let i = 0; i < enemybullets.length; i++) {
                     if (enemybullets[i].location.x < 0 || enemybullets[i].location.x > width || enemybullets[i].location.y < 0 || enemybullets[i].location.y > height) {
                         enemybullets[i].disappear();
@@ -210,28 +212,26 @@ function draw() {
                         player.damage();
                         enemybullets[i].disappear();
                         lastdmg = frameAmount;
-                        background(255, 0, 0);
                     }
                 }
             }
         }
 
         //Heal player
-        if(player.toDelete == false) {
+        if(player.toDelete == false && hpackactive == true) {
             if(player.hp < playermaxhp) {
                 for (let i = 0; i < hpacks.length; i++) {
                     if (hpacks[i].hits(player)) {
                         player.heal();
                         lastheal = frameAmount;
                         hpackactive = false;
-                        background(0, 255, 0, 100);
                     }
                 }
             }
         }
 
         //Powerup speed to player
-        if(player.toDelete == false) {
+        if(player.toDelete == false && spactive == true) {
             for(let i = 0; i < speedpower.length; i++) {
                 if(speedpower[i].hits(player)) {
                     powerUpSound.play();
@@ -240,8 +240,7 @@ function draw() {
                     lastSP = frameAmount;
                     spactive = false;
                     speedpoweron = true;
-                    background(255, 191, 0, 100);
-                    timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, 5000)
+                    timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime)
                 }
             }
         }
@@ -306,7 +305,7 @@ function draw() {
             text(`You made it to wave ${wavenumber} in ${minutes} minutes and ${seconds} seconds!`, width/2, height/2+50);
             player.opacity = 0;
             player.strokeWeight = 0;
-            playerimg = loadImage('img/empty.png');
+            playerimg = loadImage('assets/img/empty.png');
             player.move = function() {};
             player.damage = function() {};
             if(isAlive === true) {

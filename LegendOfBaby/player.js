@@ -16,6 +16,12 @@ class Player {
             if(speedpoweron && !this.toDelete){
                 image(playerspeed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
             }
+            if(damaged && !this.toDelete){
+                image(playerdamaged, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            }
+            if(healed && !this.toDelete){
+                image(playerhealed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            }
         }
 
         this.move = function () {
@@ -29,11 +35,19 @@ class Player {
         this.damage = function() {
             this.hp--;
             damageSound.play();
+            damaged = true;
+            setTimeout(function(){
+                damaged = false;
+            }, 100);
         }
 
         this.heal = function (){
             this.hp++;
             healSound.play();
+            healed = true;
+            setTimeout(function(){
+                healed = false;
+            }, 100);
         }
 
         this.health = function() {
