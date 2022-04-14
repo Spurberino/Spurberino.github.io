@@ -2,8 +2,9 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     imageMode(CENTER);
-    song.setVolume(0.2);
+    song.setVolume(0.3);
     pointSound.setVolume(0.6);
+    outputVolume(0.4);
 
     player = new Player(playerhp);
 
@@ -63,7 +64,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.9.0-beta", width-70, height-10);
+        text("v0.9.1-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
