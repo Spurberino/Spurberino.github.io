@@ -52,14 +52,6 @@ function togglePause() {
                 }
             }, shooters[i].shootspeed - shooters[i].pausetime);
         }
-        for(let i = 0; i < shooters.length; i++) {
-            shooting = setTimeout(function() {
-                if(shooters[i] && isAlive) {
-                    shooters[i].shoot();
-                    shooters[i].shotactive = false;
-                }
-            }, shooters[i].shootspeed - shooters[i].pausetime);
-        }
     }
 }
 
