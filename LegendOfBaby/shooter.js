@@ -6,8 +6,8 @@ class Shooter {
         this.speed = 3;
         this.shotactive = false;
         this.shootspeed = shootspeed;
-        this.starttime = starttime;
-        this.pausetime = pausetime;
+        this.starttime = 0;
+        this.pausetime = 0;
         this.toDelete = false;
 
         this.show = function() {

@@ -16,6 +16,9 @@ class Player {
             if(speedpoweron && !this.toDelete){
                 image(playerspeed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
             }
+            if(shieldpoweron && !this.toDelete){
+                image(playershield, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            }
             if(damaged && !this.toDelete){
                 image(playerdamaged, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
             }
