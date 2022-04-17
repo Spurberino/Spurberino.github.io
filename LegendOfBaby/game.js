@@ -116,6 +116,7 @@ function draw() {
         textSize(36);
         text(`${pad(minutes)}:${pad(seconds)}`, width/3, 40);
         text(`Score: ${score}`, width-width/3, 40);
+        text(`Enemies: ${enemies.flat().length}`, width/2, height-height+40);
         //text(`${int(player.location.x)} ${int(player.location.y)}`, width/2, 40);
 
         //Enables player
@@ -384,6 +385,13 @@ function draw() {
             }
         }
 
+        //Shieldpower spawns
+        if(frameAmount > lastSH + shCD && shactive == false) {
+            for (let i = 0; i < shamount; i++) {
+                shieldpower[i] = new PowerupShield(random(width), random(height));
+            }
+        }
+
         //Shooter attacking
         for(let i = 0; i < shooters.length; i++){
             if(shooters[i].shotactive == false) {
@@ -399,7 +407,7 @@ function draw() {
         }
 
         //New wave
-        if(chasers.length < 1 && bouncers.length < 1 && shooters.length < 1) {
+        if(enemies.flat().length <= 0) {
             fill(255);
             strokeWeight(2);
             text(`Wave ${wavenumber} completed!`, width/2, height/2);
