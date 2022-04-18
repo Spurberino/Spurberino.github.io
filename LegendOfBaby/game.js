@@ -2,7 +2,7 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
 
     imageMode(CENTER);
-    song.setVolume(0.3);
+    song.setVolume(0.2);
     pointSound.setVolume(0.6);
     outputVolume(0.4);
 
@@ -19,20 +19,7 @@ function setup() {
     for (let i = 0; i < samount; i++) {
         shooters[i] = new Shooter(random(width), random(height), shooterhp, random(2000, 4000));
     }
-
-    for (let i = 0; i < hamount; i++) {
-        hpacks[i] = new Healthpack(random(width), random(height));
-        wavehpacks--;
-    }
-
-    for (let i = 0; i < spamount; i++) {
-        speedpower[i] = new PowerupSpeed(random(width),random(height))
-    }
-
-    for (let i = 0; i < shamount; i++) {
-        shieldpower[i] = new PowerupShield(random(width),random(height))
-    }
-    
+   
     //Menu buttons
     startbutton = createButton('Start Game');
     startbutton.mousePressed(startGame);
@@ -68,7 +55,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.10.0-beta", width-70, height-10);
+        text("v0.11.0-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -116,38 +103,34 @@ function draw() {
         textSize(36);
         text(`${pad(minutes)}:${pad(seconds)}`, width/3, 40);
         text(`Score: ${score}`, width-width/3, 40);
-        text(`Enemies: ${enemies.flat().length}`, width/2, height-height+40);
-        //text(`${int(player.location.x)} ${int(player.location.y)}`, width/2, 40);
+        text(`Enemies: ${enemies.flat().length}`, width/2, 40);
+        //text(`${int(player.location.x)} ${int(player.location.y)}`, width/2, height);
 
         //Enables player
-        player.show();
-        player.move();
-        player.health();
+        if(isAlive){
+            player.show();
+            player.move();
+            player.health();
+        }
 
         //Enables healthpacks
-        if(frameAmount >= hpCD + lastheal) {
-            for (let i = 0; i < hpacks.length; i++) {
+        if(hpackactive){
+            for(let i = 0; i < hpacks.length; i++) {
                 hpacks[i].show();
-                hpackactive = true;
-                break;
             }
         }
 
         //Enables speed powerup
-        if(frameAmount >= spCD + lastSP) {
-            for (let i = 0; i < speedpower.length; i++) {
+        if(spactive){
+            for(let i = 0; i < speedpower.length; i++) {
                 speedpower[i].show();
-                spactive = true;
-                break;
             }
         }
-
+        
         //Enables shield powerup
-        if(frameAmount >= shCD + lastSH) {
-            for (let i = 0; i < shieldpower.length; i++) {
+        if(shactive){
+            for(let i = 0; i < shieldpower.length; i++) {
                 shieldpower[i].show();
-                shactive = true;
-                break;
             }
         }
 
@@ -164,7 +147,7 @@ function draw() {
             bouncers[i].move();
             bouncers[i].health();
         }
-        
+
         //Enables Shooters
         for (let i = 0; i < shooters.length; i++) {
             shooters[i].show();
@@ -252,10 +235,9 @@ function draw() {
                     powerUpSound.play();
                     shootCD = shootCD/3;
                     speedstarttime = Date.now();
-                    lastSP = frameAmount;
                     spactive = false;
                     speedpoweron = true;
-                    timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime)
+                    timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; lastSP = frameAmount; }, speedpowertime)
                 }
             }
         }
@@ -266,10 +248,9 @@ function draw() {
                 if(shieldpower[i].hits(player)) {
                     powerUpSound.play();
                     shieldstarttime = Date.now();
-                    lastSH = frameAmount;
                     shactive = false;
                     shieldpoweron = true;
-                    timeoutShield = setTimeout(function () { shieldpoweron = false; }, shieldpowertime)
+                    timeoutShield = setTimeout(function () { shieldpoweron = false; lastSH = frameAmount; }, shieldpowertime)
                 }
             }
         }
@@ -304,6 +285,8 @@ function draw() {
 
         for (let j = chasers.length-1; j >= 0; j--) {
             if (chasers[j].toDelete) {
+                //has default chance to spawn a powerup
+                spawnPowerup(chasers[j].x, chasers[j].y, 1);
                 chasers.splice(j, 1);
                 Score();
             }
@@ -311,13 +294,17 @@ function draw() {
 
         for (let j = bouncers.length-1; j >= 0; j--) {
             if (bouncers[j].toDelete) {
+                //has half as much of a chance to spawn a powerup
+                spawnPowerup(bouncers[j].x, bouncers[j].y, 0.5);
                 bouncers.splice(j, 1);
                 Score();
             }
         }
- 
+
         for (let j = shooters.length-1; j >= 0; j--) {
             if (shooters[j].toDelete) {
+                //has default chance to spawn a powerup
+                spawnPowerup(shooters[j].location.x, shooters[j].location.y, 1);
                 shooters.splice(j, 1);
                 Score();
             }
@@ -342,9 +329,7 @@ function draw() {
             text("Press R to try again", width/2, height/2+50);
             player.opacity = 0;
             player.strokeWeight = 0;
-            playerimg = loadImage('assets/img/empty.png');
-            player.move = function() {};
-            player.damage = function() {};
+            //playerimg = loadImage('assets/img/empty.png');
             if(isAlive === true) {
                 loseSound.play();
                 isAlive = false;
@@ -366,30 +351,6 @@ function draw() {
 
         if(player.location.y > height-player.r) {
             player.location.y = player.location.y - player.speed;
-        }
-
-        //These spawn kind of independently from the first wave of them. Think of fix?
-        //Healthpack spawns
-        if(frameAmount > lastheal + hpCD && hpackactive == false && wavehpacks > 0) {
-            for (let i = 0; i < hamount; i++) {
-                hpacks[i] = new Healthpack(random(width), random(height));
-                //attempt to limit amount of healthpacks per wave
-                wavehpacks--;
-            }
-        }
-
-        //Speedpower spawns
-        if(frameAmount > lastSP + spCD && spactive == false) {
-            for (let i = 0; i < spamount; i++) {
-                speedpower[i] = new PowerupSpeed(random(width), random(height));
-            }
-        }
-
-        //Shieldpower spawns
-        if(frameAmount > lastSH + shCD && shactive == false) {
-            for (let i = 0; i < shamount; i++) {
-                shieldpower[i] = new PowerupShield(random(width), random(height));
-            }
         }
 
         //Shooter attacking

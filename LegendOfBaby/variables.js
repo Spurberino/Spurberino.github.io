@@ -21,9 +21,9 @@ let spamount = 1;
 let shamount = 1;
 let shootCD = 30;
 let dmgCD = 90;
-let hpCD = 600;
-let spCD = 900;
-let shCD = 1200;
+let hpCD = 60*2;
+let spCD = 60*4;
+let shCD = 60*4;
 let playerhp = 5;
 let bulletspeed = 10;
 let score = 0;
@@ -74,3 +74,9 @@ let speedpoweron = false;
 let speedpowertime = 5000;
 let shieldpoweron = false;
 let shieldpowertime = 5000;
+
+//Spawn chances
+//NOTE: The numbers are the chance in %
+let speedchance =                   15;
+let shieldchance = speedchance  +   10;
+let healthchance = shieldchance +   25;
