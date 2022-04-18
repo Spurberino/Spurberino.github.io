@@ -4,6 +4,7 @@ function preload() {
     playerspeed = loadImage('assets/img/playerspeedpower.png');
     playerdamaged = loadImage('assets/img/playerdamaged.png');
     playerhealed = loadImage('assets/img/playerhealed.png');
+    playershield = loadImage('assets/img/playershield.png');
     bulletimg = loadImage('assets/img/bullet.png');
     enemybulletimg = loadImage('assets/img/enemybullet.png');
     chaserimg = loadImage('assets/img/chaser.png');
@@ -13,6 +14,7 @@ function preload() {
     healthpackimg = loadImage('assets/img/healthpack.png');
     backgroundimg = loadImage('assets/img/backgroundnew.png');
     powerupspeedimg = loadImage('assets/img/powerupspeed.png');
+    powerupshieldimg = loadImage('assets/img/powerupshield.png');
     //sounds
     damageSound = loadSound('assets/sound/damagesound.wav');
     loseSound = loadSound('assets/sound/losesound.mp3');
@@ -31,8 +33,16 @@ function togglePause() {
         paused = true;
         song.pause();
         if(speedpoweron) {
-            pausetime = Date.now() - starttime;
-            clearTimeout(timeoutID);
+            speedpausetime = Date.now() - speedstarttime;
+            clearTimeout(timeoutSpeed);
+        }
+        if(shieldpoweron) {
+            shieldpausetime = Date.now() - shieldstarttime;
+            clearTimeout(timeoutShield);
+        }
+        for(let i = 0; i < shooters.length; i++) {
+            shooters[i].pausetime = Date.now() - shooters[i].starttime;
+            clearTimeout(shooting);
         }
         for(let i = 0; i < shooters.length; i++) {
             shooters[i].pausetime = Date.now() - shooters[i].starttime;
@@ -42,7 +52,12 @@ function togglePause() {
        paused = false;
        song.loop();
         if(speedpoweron) {
-            timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime-pausetime);
+            speedstarttime = Date.now() - speedpausetime;
+            timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime-speedpausetime);
+        }
+        if(shieldpoweron) {
+            shieldstarttime = Date.now() - shieldpausetime;
+            timeoutShield = setTimeout(function () { shieldpoweron = false; }, shieldpowertime-shieldpausetime);
         }
         for(let i = 0; i < shooters.length; i++) {
             shooting = setTimeout(function() {
@@ -207,5 +222,8 @@ function keyPressed() {
         text("Game Paused", width/2, height/2);
         textSize(30);
         text("Press P to unpause", width/2, height/2+50);
+    }
+    if(key === "r") {
+        location.reload();
     }
 }

@@ -28,6 +28,10 @@ function setup() {
     for (let i = 0; i < spamount; i++) {
         speedpower[i] = new PowerupSpeed(random(width),random(height))
     }
+
+    for (let i = 0; i < shamount; i++) {
+        shieldpower[i] = new PowerupShield(random(width),random(height))
+    }
     
     //Menu buttons
     startbutton = createButton('Start Game');
@@ -64,7 +68,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.9.1-beta", width-70, height-10);
+        text("v0.10.0-beta", width-70, height-10);
     }
 
     if(HowToPlay) {
@@ -75,7 +79,9 @@ function draw() {
         text("You lose health if enemies hit you", width-width/3, height/2);
         text("Regain health with healthpacks", width-width/3, height/2+30);
         text("Pick up the lightning powerup to shoot faster for 5 seconds", width/2, height-height/2.5);
-        text("Press M to mute the music", width/2, height-height/3);
+        text("Pick up the shield powerup to gain a shield for 3 seconds", width/2, height-height/2.5+30);
+        text("Press M to mute the music", width/2, height-height/2.5+60);
+        text("Press R to restart the game", width/2, height-height/2.5+90);
         //Makes the menu button only appear once
         if(!backbuttonexists) {
             backbutton = createButton('Main Menu');
@@ -102,7 +108,7 @@ function draw() {
         imageMode(CENTER);
         //Health and score
         textAlign(CENTER);
-        textSize(24);
+        textSize(36);
         fill(255);
         strokeWeight(2);
         text(`HP: ${player.hp}`, 100, 40);
@@ -110,6 +116,7 @@ function draw() {
         textSize(36);
         text(`${pad(minutes)}:${pad(seconds)}`, width/3, 40);
         text(`Score: ${score}`, width-width/3, 40);
+        text(`Enemies: ${enemies.flat().length}`, width/2, height-height+40);
         //text(`${int(player.location.x)} ${int(player.location.y)}`, width/2, 40);
 
         //Enables player
@@ -131,6 +138,15 @@ function draw() {
             for (let i = 0; i < speedpower.length; i++) {
                 speedpower[i].show();
                 spactive = true;
+                break;
+            }
+        }
+
+        //Enables shield powerup
+        if(frameAmount >= shCD + lastSH) {
+            for (let i = 0; i < shieldpower.length; i++) {
+                shieldpower[i].show();
+                shactive = true;
                 break;
             }
         }
@@ -191,29 +207,27 @@ function draw() {
         }
 
         //Damage player
-        if(player.toDelete == false) {
-            if (frameAmount > lastdmg+dmgCD) {
-                for (let i = 0; i < chasers.length; i++) {
-                    if (chasers[i].hits(player)) {
-                        player.damage();
-                        lastdmg = frameAmount;
-                    }
+        if (frameAmount > lastdmg+dmgCD && player.toDelete == false && !shieldpoweron) {
+            for (let i = 0; i < chasers.length; i++) {
+                if (chasers[i].hits(player)) {
+                    player.damage();
+                    lastdmg = frameAmount;
                 }
-                for (let i = 0; i < bouncers.length; i++) {
-                    if (bouncers[i].hits(player)) {
-                        player.damage();
-                        lastdmg = frameAmount;
-                    }
+            }
+            for (let i = 0; i < bouncers.length; i++) {
+                if (bouncers[i].hits(player)) {
+                    player.damage();
+                    lastdmg = frameAmount;
                 }
-                for (let i = 0; i < enemybullets.length; i++) {
-                    if (enemybullets[i].location.x < 0 || enemybullets[i].location.x > width || enemybullets[i].location.y < 0 || enemybullets[i].location.y > height) {
-                        enemybullets[i].disappear();
-                    }
-                    if (enemybullets[i].hits(player)) {
-                        player.damage();
-                        enemybullets[i].disappear();
-                        lastdmg = frameAmount;
-                    }
+            }
+            for (let i = 0; i < enemybullets.length; i++) {
+                if (enemybullets[i].location.x < 0 || enemybullets[i].location.x > width || enemybullets[i].location.y < 0 || enemybullets[i].location.y > height) {
+                    enemybullets[i].disappear();
+                }
+                if (enemybullets[i].hits(player)) {
+                    player.damage();
+                    enemybullets[i].disappear();
+                    lastdmg = frameAmount;
                 }
             }
         }
@@ -237,11 +251,25 @@ function draw() {
                 if(speedpower[i].hits(player)) {
                     powerUpSound.play();
                     shootCD = shootCD/3;
-                    starttime = Date.now();
+                    speedstarttime = Date.now();
                     lastSP = frameAmount;
                     spactive = false;
                     speedpoweron = true;
-                    timeoutID = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime)
+                    timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime)
+                }
+            }
+        }
+
+        //Powerup shield to player
+        if(player.toDelete == false && shactive == true) {
+            for(let i = 0; i < shieldpower.length; i++) {
+                if(shieldpower[i].hits(player)) {
+                    powerUpSound.play();
+                    shieldstarttime = Date.now();
+                    lastSH = frameAmount;
+                    shactive = false;
+                    shieldpoweron = true;
+                    timeoutShield = setTimeout(function () { shieldpoweron = false; }, shieldpowertime)
                 }
             }
         }
@@ -264,6 +292,13 @@ function draw() {
             if (speedpower[i].toDelete) {
                 speedpower.splice(i, 1);
                 spackactive = false;
+            }
+        }
+
+        for (let i = shieldpower.length-1; i >= 0; i--) {
+            if (shieldpower[i].toDelete) {
+                shieldpower.splice(i, 1);
+                shactive = false;
             }
         }
 
@@ -299,11 +334,12 @@ function draw() {
         }
 
         if(player.toDelete) {
-            strokeWeight(0);
+            strokeWeight(4);
             textSize(52);
             fill(255);
-            text("You died", width/2, height/2);
-            text(`You made it to wave ${wavenumber} in ${minutes} minutes and ${seconds} seconds!`, width/2, height/2+50);
+            text("You died", width/2, height/2-50);
+            text(`You made it to wave ${wavenumber} in ${minutes} minutes and ${seconds} seconds!`, width/2, height/2);
+            text("Press R to try again", width/2, height/2+50);
             player.opacity = 0;
             player.strokeWeight = 0;
             playerimg = loadImage('assets/img/empty.png');
@@ -349,6 +385,13 @@ function draw() {
             }
         }
 
+        //Shieldpower spawns
+        if(frameAmount > lastSH + shCD && shactive == false) {
+            for (let i = 0; i < shamount; i++) {
+                shieldpower[i] = new PowerupShield(random(width), random(height));
+            }
+        }
+
         //Shooter attacking
         for(let i = 0; i < shooters.length; i++){
             if(shooters[i].shotactive == false) {
@@ -364,8 +407,9 @@ function draw() {
         }
 
         //New wave
-        if(chasers.length < 1 && bouncers.length < 1 && shooters.length < 1) {
+        if(enemies.flat().length <= 0) {
             fill(255);
+            strokeWeight(2);
             text(`Wave ${wavenumber} completed!`, width/2, height/2);
             text("Press Space to go to next wave", width/2, height-height/2.5);
             wavecheckpoint = true;
@@ -373,6 +417,7 @@ function draw() {
             //maybe find other solution?
             lastSP++;
             lastheal++;
+            lastSH++;
             enterShop();
             if (!newwave && keyIsPressed && keyCode === 32) {
                 newwave = true;
