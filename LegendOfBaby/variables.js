@@ -42,6 +42,7 @@ let backbuttonexists = false;
 let damaged = false;
 let healed = false;
 let songmuted = false;
+let soundmuted = false;
 let wavenumber = 1;
 let newwave = false;
 let wavecheckpoint = false;

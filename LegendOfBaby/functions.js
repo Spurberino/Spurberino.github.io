@@ -191,7 +191,7 @@ function mainMenu() {
 
 //makes timer always have two numbers for seconds and minutes
 function pad(val) {
-    var valString = val + "";
+    let valString = val + "";
     if (valString.length < 2) {
         return "0" + valString;
     } else {
@@ -209,9 +209,22 @@ function mutesong() {
     }
 }
 
+function mutesound() {
+    if (!soundmuted) {
+        outputVolume(0);
+        soundmuted = true;
+    } else {
+        outputVolume(0.4);
+        soundmuted = false;
+    }
+}
+
 function keyPressed() {
     if (key === "m") {
         mutesong();
+    }
+    if (key === "n") {
+        mutesound();
     }
     if (key === 'p') {
         togglePause();

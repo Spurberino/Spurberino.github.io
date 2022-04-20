@@ -55,7 +55,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.11.1-beta", width - 70, height - 10);
+        text("v0.11.2-beta", width - 70, height - 10);
     }
 
     if (HowToPlay) {
