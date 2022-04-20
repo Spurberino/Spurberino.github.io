@@ -25,6 +25,9 @@ class Player {
             if(healed && !this.toDelete){
                 image(playerhealed, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
             }
+            if(this.toDelete){
+                image(emptyimg, this.location.x, this.location.y, this.r*2.5, this.r*2.5);
+            }
         }
 
         this.move = function () {

@@ -5,6 +5,7 @@ function preload() {
     playerdamaged = loadImage('assets/img/playerdamaged.png');
     playerhealed = loadImage('assets/img/playerhealed.png');
     playershield = loadImage('assets/img/playershield.png');
+    emptyimg = loadImage('assets/img/empty.png');
     bulletimg = loadImage('assets/img/bullet.png');
     enemybulletimg = loadImage('assets/img/enemybullet.png');
     chaserimg = loadImage('assets/img/chaser.png');
@@ -44,20 +45,16 @@ function togglePause() {
             shooters[i].pausetime = Date.now() - shooters[i].starttime;
             clearTimeout(shooting);
         }
-        for(let i = 0; i < shooters.length; i++) {
-            shooters[i].pausetime = Date.now() - shooters[i].starttime;
-            clearTimeout(shooting);
-        }
     } else if (paused) {
        paused = false;
        song.loop();
         if(speedpoweron) {
             speedstarttime = Date.now() - speedpausetime;
-            timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; }, speedpowertime-speedpausetime);
+            timeoutSpeed = setTimeout(function () { shootCD = shootCD*3; speedpoweron = false; lastSP = frameAmount; }, speedpowertime-speedpausetime);
         }
         if(shieldpoweron) {
             shieldstarttime = Date.now() - shieldpausetime;
-            timeoutShield = setTimeout(function () { shieldpoweron = false; }, shieldpowertime-shieldpausetime);
+            timeoutShield = setTimeout(function () { shieldpoweron = false; lastSH = frameAmount; }, shieldpowertime-shieldpausetime);
         }
         for(let i = 0; i < shooters.length; i++) {
             shooting = setTimeout(function() {
@@ -87,7 +84,7 @@ function howToPlay() {
     removeElements();
 }
 function buyMaxLife() {
-    if(score>=pluslifeprice){
+    if(score>=pluslifeprice && playermaxhp < 10){
         playermaxhp++;
         score = score-pluslifeprice;
         pluslifeprice = pluslifeprice+5;
@@ -101,7 +98,7 @@ function buyMoveSpeed() {
     }
 }
 function buyDamage() {
-    if(score>=damageprice && bulletdamage <= 2){
+    if(score>=damageprice && bulletdamage < 2){
         bulletdamage = bulletdamage*2;
         score = score-damageprice;
         //more than 2 bullet damage might be OP
@@ -143,7 +140,11 @@ function buyLife() {
 function enterShop() {
     removeElements();
     //Increase max hp
-    buyMaxLifeButton = createButton(`+1 max life for ${pluslifeprice} score`);
+    if(playermaxhp < 10) {
+        buyMaxLifeButton = createButton(`+1 max life for ${pluslifeprice} score`);
+    } else {
+        buyMaxLifeButton = createButton(nomoreupgradetxt);
+    }
     buyMaxLifeButton.addClass("shop");
     buyMaxLifeButton.mousePressed(buyMaxLife);
     buyMaxLifeButton.position(width/3-80,height/4);
@@ -153,7 +154,7 @@ function enterShop() {
     buyMoveSpeedButton.mousePressed(buyMoveSpeed);
     buyMoveSpeedButton.position(width/2-80,height/4);
     //Increase bullet damage
-    if(bulletdamage <= 2) {
+    if(bulletdamage < 2) {
         buyDamageButton = createButton(`Double your damage for ${damageprice} score`);
     } else {
         buyDamageButton = createButton(nomoreupgradetxt);
@@ -225,5 +226,47 @@ function keyPressed() {
     }
     if(key === "r") {
         location.reload();
+    }
+}
+
+function spawnHealth(x, y) {
+    for (let i = 0; i < hamount; i++) {
+        hpacks[i] = new Healthpack(x, y);
+        hpackactive = true;
+        wavehpacks--;
+    }
+}
+
+function spawnSpeedpower(x, y) {
+    for (let i = 0; i < spamount; i++) {
+        speedpower[i] = new PowerupSpeed(x, y);
+        spactive = true;
+    }
+}
+
+function spawnShieldpower(x, y) {
+    for (let i = 0; i < shamount; i++) {
+        shieldpower[i] = new PowerupShield(x, y);
+        shactive = true;
+    }
+}
+
+//function that has a chance to spawn one of the three powerups
+function spawnPowerup(x, y, mult) {
+    let r = random(100);
+    if (r < speedchance*mult) {
+        if(!spactive && !speedpoweron && frameAmount >= spCD + lastSP){
+            spawnSpeedpower(x, y);
+        }
+    } else if (r < shieldchance*mult) {
+        if(!shactive && !shieldpoweron && frameAmount >= shCD + lastSH){
+            spawnShieldpower(x, y);
+        }
+    } else if (r < healthchance*mult) {
+        if(!hpackactive && frameAmount >= hpCD + lastheal){
+            spawnHealth(x, y);
+        }
+    } else {
+        //do nothing
     }
 }
