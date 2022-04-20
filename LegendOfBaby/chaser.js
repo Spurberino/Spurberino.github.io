@@ -7,14 +7,14 @@ class Chaser {
         this.speed = s;
         this.toDelete = false;
 
-        this.show = function() {
+        this.show = function () {
             strokeWeight(2);
             fill(89, 133, 133);
             ellipse(this.x, this.y, this.r * 2);
-            image(chaserimg ,this.x, this.y, this.r*2.5, this.r*2.5);
+            image(chaserimg, this.x, this.y, this.r * 2.5, this.r * 2.5);
         }
 
-        this.move = function() {
+        this.move = function () {
 
             let targetX = player.location.x;
             let dx = targetX - this.x;
@@ -26,23 +26,23 @@ class Chaser {
 
         }
 
-        this.health = function() {
+        this.health = function () {
             if (this.hp <= 0) {
                 this.toDelete = true;
             }
         }
 
-        this.damage = function() {
-            this.hp = this.hp-bulletdamage;
+        this.damage = function () {
+            this.hp = this.hp - bulletdamage;
         }
 
-        
-        this.hits = function(player){
+
+        this.hits = function (player) {
             let d = dist(this.x, this.y, player.location.x, player.location.y);
-            if (d < this.r + player.r){
-              return true;
+            if (d < this.r + player.r) {
+                return true;
             } else {
-              return false;
+                return false;
             }
         }
     }
