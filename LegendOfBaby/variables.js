@@ -21,9 +21,9 @@ let spamount = 1;
 let shamount = 1;
 let shootCD = 30;
 let dmgCD = 90;
-let hpCD = 60*2;
-let spCD = 60*4;
-let shCD = 60*4;
+let hpCD = 60 * 2;
+let spCD = 60 * 4;
+let shCD = 60 * 4;
 let playerhp = 5;
 let bulletspeed = 10;
 let score = 0;
@@ -42,6 +42,7 @@ let backbuttonexists = false;
 let damaged = false;
 let healed = false;
 let songmuted = false;
+let soundmuted = false;
 let wavenumber = 1;
 let newwave = false;
 let wavecheckpoint = false;
@@ -78,5 +79,5 @@ let shieldpowertime = 5000;
 //Spawn chances
 //NOTE: The numbers are the chance in %
 let speedchance =                   15;
-let shieldchance = speedchance  +   10;
+let shieldchance = speedchance +    10;
 let healthchance = shieldchance +   25;
