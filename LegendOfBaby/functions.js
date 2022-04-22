@@ -227,6 +227,7 @@ function keyPressed() {
         mutesound();
     }
     if (key === 'p') {
+        if (!GameStarted) return;
         togglePause();
         textSize(48);
         stroke(0);
