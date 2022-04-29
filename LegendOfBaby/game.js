@@ -114,7 +114,7 @@ function draw() {
     }
 
     //Enables healthpacks
-    if (hpackactive) {
+    if (hpacks.length > 0) {
         for (let i = 0; i < hpacks.length; i++) {
             hpacks[i].show();
         }
@@ -216,13 +216,12 @@ function draw() {
     }
 
     //Heal player
-    if (player.toDelete == false && hpackactive == true) {
+    if (player.toDelete == false && hpacks.length > 0) {
         if (player.hp < playermaxhp) {
             for (let i = 0; i < hpacks.length; i++) {
                 if (hpacks[i].hits(player)) {
                     player.heal();
                     lastheal = frameAmount;
-                    hpackactive = false;
                 }
             }
         }
@@ -265,7 +264,6 @@ function draw() {
     for (let i = hpacks.length - 1; i >= 0; i--) {
         if (hpacks[i].toDelete) {
             hpacks.splice(i, 1);
-            hpackactive = false;
         }
     }
 
@@ -283,36 +281,36 @@ function draw() {
         }
     }
 
-    for (let j = chasers.length - 1; j >= 0; j--) {
-        if (chasers[j].toDelete) {
+    for (let i = chasers.length - 1; i >= 0; i--) {
+        if (chasers[i].toDelete) {
             //has default chance to spawn a powerup
-            spawnPowerup(chasers[j].x, chasers[j].y, 1);
-            chasers.splice(j, 1);
+            spawnPowerup(chasers[i].x, chasers[i].y, 1);
+            chasers.splice(i, 1);
             Score(1);
         }
     }
 
-    for (let j = bouncers.length - 1; j >= 0; j--) {
-        if (bouncers[j].toDelete) {
+    for (let i = bouncers.length - 1; i >= 0; i--) {
+        if (bouncers[i].toDelete) {
             //has half as much of a chance to spawn a powerup
-            spawnPowerup(bouncers[j].x, bouncers[j].y, 0.5);
-            bouncers.splice(j, 1);
+            spawnPowerup(bouncers[i].x, bouncers[i].y, 0.5);
+            bouncers.splice(i, 1);
             Score(1);
         }
     }
 
-    for (let j = shooters.length - 1; j >= 0; j--) {
-        if (shooters[j].toDelete) {
+    for (let i = shooters.length - 1; i >= 0; i--) {
+        if (shooters[i].toDelete) {
             //has default chance to spawn a powerup
-            spawnPowerup(shooters[j].location.x, shooters[j].location.y, 1);
-            shooters.splice(j, 1);
+            spawnPowerup(shooters[i].location.x, shooters[i].location.y, 1);
+            shooters.splice(i, 1);
             Score(2);
         }
     }
 
-    for (let j = enemybullets.length - 1; j >= 0; j--) {
-        if (enemybullets[j].toDelete) {
-            enemybullets.splice(j, 1);
+    for (let i = enemybullets.length - 1; i >= 0; i--) {
+        if (enemybullets[i].toDelete) {
+            enemybullets.splice(i, 1);
         }
     }
 
@@ -388,7 +386,6 @@ function draw() {
                 samount = samount + (wavenumber - 1) % 2;
                 lastdmg = frameAmount;
                 wavenumber++;
-                wavehpacks = 3;
 
                 for (let i = 0; i < camount; i++) {
                     chasers[i] = new Chaser(random(width), random(height), chaserhp, random(50, 150));

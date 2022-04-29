@@ -244,11 +244,7 @@ function keyPressed() {
 }
 
 function spawnHealth(x, y) {
-    for (let i = 0; i < hamount; i++) {
-        hpacks[i] = new Healthpack(x, y);
-        hpackactive = true;
-        wavehpacks--;
-    }
+    hpacks.push(new Healthpack(x, y));
 }
 
 function spawnSpeedpower(x, y) {
@@ -277,7 +273,7 @@ function spawnPowerup(x, y, mult) {
             spawnShieldpower(x, y);
         }
     } else if (r < healthchance * mult) {
-        if (!hpackactive && frameAmount >= hpCD + lastheal) {
+        if (hpacks.length < hamount && frameAmount >= hpCD + lastheal) {
             spawnHealth(x, y);
         }
     } else {
