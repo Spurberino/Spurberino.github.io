@@ -67,8 +67,8 @@ function togglePause() {
     }
 }
 
-function Score() {
-    score++;
+function Score(amount) {
+    score+=amount;
     pointSound.play();
 }
 

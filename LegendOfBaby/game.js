@@ -55,7 +55,7 @@ function draw() {
         strokeWeight(2);
         textSize(24);
         //Version number
-        text("v0.11.3-beta", width - 70, height - 10);
+        text("v0.11.4-beta", width - 70, height - 10);
     }
 
     if (HowToPlay) {
@@ -288,7 +288,7 @@ function draw() {
             //has default chance to spawn a powerup
             spawnPowerup(chasers[j].x, chasers[j].y, 1);
             chasers.splice(j, 1);
-            Score();
+            Score(1);
         }
     }
 
@@ -297,7 +297,7 @@ function draw() {
             //has half as much of a chance to spawn a powerup
             spawnPowerup(bouncers[j].x, bouncers[j].y, 0.5);
             bouncers.splice(j, 1);
-            Score();
+            Score(1);
         }
     }
 
@@ -306,7 +306,7 @@ function draw() {
             //has default chance to spawn a powerup
             spawnPowerup(shooters[j].location.x, shooters[j].location.y, 1);
             shooters.splice(j, 1);
-            Score();
+            Score(2);
         }
     }
 
