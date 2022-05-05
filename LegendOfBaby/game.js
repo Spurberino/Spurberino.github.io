@@ -65,8 +65,8 @@ function draw() {
         text("Shoot enemies to gain points", width - width / 3, height / 2 - 30);
         text("You lose health if enemies hit you", width - width / 3, height / 2);
         text("Regain health with healthpacks", width - width / 3, height / 2 + 30);
-        text("Pick up the lightning powerup to shoot faster for 5 seconds", width / 2, height - height / 2.5);
-        text("Pick up the shield powerup to gain a shield for 3 seconds", width / 2, height - height / 2.5 + 30);
+        text(`Pick up the lightning powerup to shoot faster for ${speedpowertime / 1000} seconds`, width / 2, height - height / 2.5);
+        text(`Pick up the shield powerup to gain a shield for ${shieldpowertime / 1000} seconds`, width / 2, height - height / 2.5 + 30);
         text("Press M to mute the music", width / 2, height - height / 2.5 + 60);
         text("Press R to restart the game", width / 2, height - height / 2.5 + 90);
         //Makes the menu button only appear once
