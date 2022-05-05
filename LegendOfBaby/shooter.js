@@ -21,13 +21,13 @@ class Shooter {
             let targetX = player.location.x;
             let targetY = player.location.y;
             let d = dist(this.location.x, this.location.y, targetX, targetY)
-            let vector = createVector(this.location.x - targetX, this.location.y - targetY);
-            vector.normalize();
-            this.vector = vector;
+            let direction = createVector(this.location.x - targetX, this.location.y - targetY);
+            direction.normalize();
+            this.direction = direction;
             if (d <= 300) {
-                this.location = this.location.add(vector.mult(this.speed));
+                this.location = this.location.add(direction.mult(this.speed));
             } else if (d >= 350) {
-                this.location = this.location.sub(vector.mult(this.speed));
+                this.location = this.location.sub(direction.mult(this.speed));
             }
             //Border
             if (this.location.x < 0 + this.r) {
@@ -45,7 +45,7 @@ class Shooter {
         }
 
         this.shoot = function () {
-            let enemybullet = new Enemybullet(this.location.x, this.location.y, this.vector);
+            let enemybullet = new Enemybullet(this.location.x, this.location.y, this.direction);
             enemybullets.push(enemybullet);
         }
 
